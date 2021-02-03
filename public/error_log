@@ -1,0 +1,2 @@
+[26-Feb-2020 09:10:15 UTC] PHP Fatal error:  Cannot redeclare App\User::orders() in /home/makhdoom/public_html/app/User.php on line 83
+[26-Feb-2020 09:10:16 UTC] PHP Fatal error:  Cannot redeclare App\User::orders() in /home/makhdoom/public_html/app/User.php on line 83
