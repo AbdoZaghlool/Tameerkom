@@ -39,16 +39,16 @@ class SplashController extends Controller
     {
         $this->validate($request, [
             'image'       => 'required|mimes:jpeg,jpg,png|max:2048',
-            'provider_id' => 'nullable',
+            'product_id'  => 'nullable|exists:products',
             'link'        => 'nullable',
         ]);
-        if($request->provider_id && $request->link){
-            flash('لا يمكن اضافة الرابط والاسرة معا')->error();
+        if ($request->product_id && $request->link) {
+            flash('لا يمكن اضافة الرابط والمنتج معا')->error();
             return back()->withInput();
         }
         Slider::create([
             'image'       => UploadImage($request->image, 'slide', 'uploads/sliders'),
-            'provider_id' => $request->provider_id == 0 ? null : $request->provider_id,
+            'product_id'  => $request->product_id == 0 ? null : $request->product_id,
             'link'        => $request->link,
         ]);
         flash('تم اضافة البانر بنجاح');
@@ -76,17 +76,17 @@ class SplashController extends Controller
     public function update(Request $request, Slider $splash)
     {
         $this->validate($request, [
-            'provider_id' => 'nullable',
+            'product_id' => 'nullable|exists:products',
             'image'       => 'nullable|mimes:jpeg,jpg,png|max:2048'
         ]);
 
-        if($request->provider_id && $request->link){
-            flash('لا يمكن اضافة الرابط والاسرة معا')->error();
+        if ($request->product_id && $request->link) {
+            flash('لا يمكن اضافة الرابط والمنتج معا')->error();
             return back()->withInput();
         }
 
         $splash->update([
-            'provider_id' => $request->provider_id ?? $splash->provider_id,
+            'product_id' => $request->product_id ?? $splash->product_id,
             'link'        => $request->link ?? $splash->link,
             'image'       => $request->image == null ? $splash->image : UploadImageEdit($request->image, 'slide', 'uploads/sliders', $splash->image)
         ]);

@@ -47,11 +47,6 @@ class Product extends Model
         return $this->belongsTo(User::class, 'provider_id');
     }
 
-    public function type()
-    {
-        return $this->belongsTo(Type::class);
-    }
-
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
@@ -67,6 +62,10 @@ class Product extends Model
         return $this->hasMany(ProductRate::class);
     }
 
+    public function favourites()
+    {
+        return $this->morphToMany(Favourite::class, 'favourable');
+    }
 
     /**
      * filter the model by name, take the sub cat or not

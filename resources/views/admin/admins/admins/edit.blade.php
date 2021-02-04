@@ -70,7 +70,7 @@
                                 <input id="username" name="name" type="text" value="{{ $data->name }}" class="form-control" placeholder="الاسم">
                                 @if ($errors->has('name'))
                                     <span class="help-block">
-                                       <strong style="color: red;">{{ $errors->first('name') }}</strong>
+                                        <strong style="color: red;">{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -82,7 +82,7 @@
                                 <input id="email" name="email" type="email" value="{{ $data->email }}" class="form-control" placeholder="الايميل">
                                 @if ($errors->has('email'))
                                     <span class="help-block">
-                                       <strong style="color: red;">{{ $errors->first('email') }}</strong>
+                                        <strong style="color: red;">{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
                             </div>

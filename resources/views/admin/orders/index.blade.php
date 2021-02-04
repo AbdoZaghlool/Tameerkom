@@ -48,8 +48,7 @@
             </div>
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-hover table-checkable order-column"
-                    id="sample_1">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
                             <th>
@@ -59,7 +58,7 @@
                                 </label>
                             </th>
                             <th> رقم الطلب</th>
-                            <th> الاسرة</th>
+                            <th> المزودينة</th>
                             <th> العميل </th>
                             <th> السائق </th>
                             <th> نوع الطلب </th>
@@ -88,18 +87,18 @@
                             <td> {{$order->recieve_at ?? '' }} </td>
                             <td>
                                 @if($order->status == '0')
-                                    <button type="button" class="btn btn-circle green btn-sm">جديد</button>
+                                <button type="button" class="btn btn-circle green btn-sm">جديد</button>
                                 @elseif($order->status == '1')
-                                    <button type="button" class="btn btn-circle blue btn-sm">مقبول</button>
+                                <button type="button" class="btn btn-circle blue btn-sm">مقبول</button>
                                 @elseif($order->status == '2')
-                                    <button type="button" class="btn btn-circle yellow btn-sm">نشط</button>
+                                <button type="button" class="btn btn-circle yellow btn-sm">نشط</button>
                                 @elseif($order->status == '3')
-                                    <button type="button" class="btn btn-circle purple btn-sm">مكتمل</button>
-                                @endif  
+                                <button type="button" class="btn btn-circle purple btn-sm">مكتمل</button>
+                                @endif
                             </td>
                             <td> {{ convertArabicNumbersToEnglish($order->price) }} </td>
                             <td> <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a></td>
-                            
+
                         </tr>
                         @endforeach
                     </tbody>
@@ -121,25 +120,26 @@
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-            var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
-            $('body').on('click', '.delete_attribute', function() {
-                var id = $(this).attr('data');
-                var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق",
-                    closeOnConfirm: false
-                }, function() {
-                    window.location.href = "{{ url('/') }}" + "/admin/orders/"+id+"/delete";
-                });
+        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
+        $('body').on('click', '.delete_attribute', function() {
+            var id = $(this).attr('data');
+            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+                , closeOnConfirm: false
+            }, function() {
+                window.location.href = "{{ url('/') }}" + "/admin/orders/" + id + "/delete";
             });
         });
+    });
+
 </script>
 
 @endsection

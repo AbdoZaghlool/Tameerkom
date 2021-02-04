@@ -48,14 +48,13 @@
             <form action="{{route('post-send-user-notifications')}}" method="POST">@csrf
                 <div class="form-group">
                     <label>اختر مستخدم</label>
-                    {!! Form::select('user_id[]', 
+                    {!! Form::select('user_id[]',
                     [
-                        'العملاء'        => App\User::where('type','0')->pluck('name','id'), 
-                        'الاسر المنتجة' => App\User::where('type','1')->pluck('name','id'), 
-                        'السائقين'      => App\User::where('type','2')->pluck('name','id'), 
-                    ], 
+                    'العملاء' => App\User::where('type','0')->pluck('name','id'),
+                    'المزودين' => App\User::where('type','1')->pluck('name','id'),
+                    ],
                     null,
-                    ['class'=>'form-control select2','multiple']) !!}
+                    ['class'=>'form-control select2','multiple', 'required']) !!}
                     @if ($errors->has('user_id'))
                     <span class="help-block">
                         <strong style="color: red;">{{ $errors->first('user_id') }}</strong>
@@ -102,25 +101,26 @@
 
 <script>
     $(document).ready(function() {
-            var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
-            $('body').on('click', '.delete_attribute', function() {
-                var id = $(this).attr('data');
-                var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق",
-                    closeOnConfirm: false
-                }, function() {
-                    window.location.href = "{{ url('/') }}" + "/admin/orders/"+id+"/delete";
-                });
+        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
+        $('body').on('click', '.delete_attribute', function() {
+            var id = $(this).attr('data');
+            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+                , closeOnConfirm: false
+            }, function() {
+                window.location.href = "{{ url('/') }}" + "/admin/orders/" + id + "/delete";
             });
         });
+    });
+
 </script>
 
 @endsection

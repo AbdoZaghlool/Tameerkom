@@ -48,8 +48,7 @@
             </div>
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-hover table-checkable order-column"
-                    id="sample_1">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
                             <th>
@@ -60,7 +59,7 @@
                             </th>
                             <th></th>
                             <th>رقم الطلب</th>
-                            <th> الاسرة</th>
+                            <th> المزودينة</th>
                             <th> العميل </th>
                             <th> السائق </th>
                             <th> حالة الطلب </th>
@@ -87,7 +86,7 @@
                             <td> <button type="button" class="btn btn-circle red btn-sm">ملغي</button> </td>
                             <td> {{$order->price}} </td>
                             <td> {{$order->notes}} </td>
-                            <td> 
+                            <td>
                                 <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a>
                             </td>
                         </tr>
@@ -111,32 +110,33 @@
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-            var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
+        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
 
-            $('body').on('click', '.delete_attribute', function() {
-                var id = $(this).attr('data');
+        $('body').on('click', '.delete_attribute', function() {
+            var id = $(this).attr('data');
 
-                var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
+            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
 
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق",
-                    closeOnConfirm: false
-                }, function() {
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+                , closeOnConfirm: false
+            }, function() {
 
-                    window.location.href = "{{ url('/') }}" + "/admin/orders/"+id+"/delete";
-
-                });
+                window.location.href = "{{ url('/') }}" + "/admin/orders/" + id + "/delete";
 
             });
 
         });
+
+    });
+
 </script>
 
 

@@ -80,11 +80,11 @@
                                 <td><a href="mailto:{{ $value->email }}"> {{ $value->email }} </a></td>
                                 <td><a href="del:{{ $value->phone }}"> {{ $value->phone }} </a></td>
                                 <td> 
-                                    @if ($value->roles()->first() !== null)
+                                    {{--  @if ($value->roles()->first() !== null)
                                         <a href="{{route('roles.edit',$value->roles()->first()->id)}}">
                                             {{ $value->roles()->first()->name }}
                                         </a>
-                                    @endif
+                                    @endif  --}}
                                 </td>
                                 <td> {{ $value->created_at->format('Y-m-d g:i A') }} </td>
 

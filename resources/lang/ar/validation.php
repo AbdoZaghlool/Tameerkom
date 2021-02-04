@@ -118,7 +118,7 @@ return [
     */
     'attributes'           => [
         'name'                  => 'الاسم',
-        'family_commission'     => 'عمولة الاسر',
+        'family_commission'     => 'عمولة المزودين',
         'min_value_withdrow_driver'     => 'الحد الادني للسحب',
         'min_value_withdrow_family'     => 'الحد الادني للسحب',
         'tax'     => 'الضريبة',
@@ -280,7 +280,7 @@ return [
         "region"    => "المنطقة",
         "user_type"    => "نوع الحساب",
         "company_name"    => "اسم الشركة",
-        "commercial_number"    => "رقم السجل التجاري",
+        "commercial_record"    => "رقم السجل التجاري",
         "commercial_end_date"    => "تاريخ انتهاء السجل التجاري",
         "source.name"    => "اسم المستفيد",
         "source.number"    => "رقم الحساب",

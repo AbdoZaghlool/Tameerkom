@@ -74,21 +74,7 @@ float: right;
                 <div class="number">
                     <span>{{App\User::whereType('1')->count()}}</span>
                 </div>
-                <div class="desc"> الاسر المنتجة </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light green" href="{{route('drivers.index')}}">
-            <div class="visual">
-                <i class="fa fa-car"></i>
-            </div>
-            <div class="details">
-                <div class="number">
-                    <span>{{App\User::whereType('2')->count()}}</span>
-                </div>
-                <div class="desc"> السائقين </div>
+                <div class="desc"> المزودين </div>
             </div>
         </a>
     </div>
@@ -130,7 +116,7 @@ float: right;
                 <div class="number">
                     <span>{{App\Category::count()}}</span>
                 </div>
-                <div class="desc"> التصنيفات </div>
+                <div class="desc"> الاقسام </div>
             </div>
         </a>
     </div>

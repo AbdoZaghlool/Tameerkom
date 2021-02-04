@@ -51,7 +51,7 @@
         @endif
         @include('flash::message')
         {!! Form::model($splash,['action'=>['AdminController\SplashController@update'
-        ,$splash->id],'method'=>'PUT', 'enctype' => 'multipart/form-data',  'id'=>'main_form' ]) !!}
+        ,$splash->id],'method'=>'PUT', 'enctype' => 'multipart/form-data', 'id'=>'main_form' ]) !!}
 
         {{-- @method('put') --}}
         <!-- BEGIN CONTENT -->
@@ -66,71 +66,22 @@
                             <div class="form-body">
 
                                 <div class="form-group">
-                                    <label class="control-label">الفلاتر </label>
-                                    <br>
-                                    {{--  {!! Form::select('filter', App\Topic::pluck('name','id'), null,
-                                        ['class' => 'form-control', 'placeholder' => 'اختر قسم'])
-                                    !!}
-                                    @if ($errors->has('filter'))
-                                    <span class="help-block">
-                                        <strong style="color: red;">{{ $errors->first('filter') }}</strong>
-                                    </span>
-                                    @endif
-                                    <hr>  --}}
-                                    {!! Form::open(['method' => 'get','id' => 'filter_form']) !!}
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {!! Form::text('name',request()->input('name'),[
-                                                'placeholder' => 'اسم الاسرة',
-                                                'class' => 'form-control'
-                                                ]) !!}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {!! Form::select('city_id',\App\City::pluck('name','id'),null,[
-                                                'placeholder' => 'المدن',
-                                                'class' => 'form-control',
-                                                ]) !!}
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {!! Form::select('topic_id',\App\Topic::pluck('name','id'),null,[
-                                                'placeholder' => 'الاقسام',
-                                                'class' => 'form-control',
-                                                ]) !!}
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-1">
-                                            <div class="form-group">
-                                                <button class="btn btn-primary btn-block" onclick="sendOptions();" type="button"><i class="fa fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {!! Form::close() !!}
-                                </div>
-
-                                <div class="form-group">
                                     <label for="link" class="control-label">اللينك</label>
                                     <input type="text" name="link" id="link" class="form-control" value="{{$splash->link}}">
                                     @error('link')
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('link') }}</strong>
-                                        </span>
+                                    <span class="help-block">
+                                        <strong style="color: red;">{{ $errors->first('link') }}</strong>
+                                    </span>
                                     @enderror
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label">الاسر المنتجة </label>
-                                    {!! Form::select('provider_id', App\User::where('type','1')->whereActive(1)->pluck('name','id'),
-                                    $splash->provider_id, ['class' => 'form-control','placeholder'=> 'اختر اسرة']) !!}
-                                    @if ($errors->has('provider_id'))
+                                    <label class="control-label">المنتجات </label>
+                                    {!! Form::select('product_id', App\Product::pluck('name','id'),
+                                    $splash->product_id, ['class' => 'form-control','placeholder'=> 'اختر']) !!}
+                                    @if ($errors->has('product_id'))
                                     <span class="help-block">
-                                        <strong style="color: red;">{{ $errors->first('provider_id') }}</strong>
+                                        <strong style="color: red;">{{ $errors->first('product_id') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -140,8 +91,7 @@
                                         <label class="control-label col-md-3">الصورة </label>
                                         <div class="col-md-9">
                                             <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                <div class="fileinput-preview thumbnail" data-trigger="fileinput"
-                                                    style="width: 200px; height: 150px; ">
+                                                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; ">
                                                     <img src="{{asset('uploads/sliders/'.$splash->image)}}" alt="">
                                                 </div>
                                                 <div>
@@ -149,8 +99,7 @@
                                                         <span class="fileinput-new"> اختر الصورة </span>
                                                         <span class="fileinput-exists"> تغيير </span>
                                                         <input type="file" name="image"> </span>
-                                                    <a href="javascript:;" class="btn red fileinput-exists"
-                                                        data-dismiss="fileinput"> إزالة </a>
+                                                    <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
                                                 </div>
                                             </div>
                                             @if ($errors->has('image'))
@@ -199,37 +148,44 @@
 
 <script src="{{ URL::asset('admin/ckeditor/ckeditor.js') }}"></script>
 <script>
-    function subForm(){
+    function subForm() {
         var form = document.getElementById('main_form');
         form.submit();
     }
+
 </script>
 
 <script>
-    function sendOptions(){
+    function sendOptions() {
         var fd = $("form").serialize();
         $.ajax({
-        url: '/get-filterd-users',
-        data: fd,
-        processData: false,
-        contentType: false,
-        type: 'get',
-        success: function(data){
+            url: '/get-filterd-users'
+            , data: fd
+            , processData: false
+            , contentType: false
+            , type: 'get'
+            , success: function(data) {
 
-            $('select[name="provider_id"]').empty();
-            if(data.length > 0){
-                $.each(data , function (key, value) {
-                    {{--  console.log(value);  --}}
+                $('select[name="provider_id"]').empty();
+                if (data.length > 0) {
+                    $.each(data, function(key, value) {
+                        {
+                            {
+                                --console.log(value);
+                                --
+                            }
+                        }
+                        $('select[name="provider_id"]')
+                            .append('<option value="' + value['id'] + '">' + value['name'] + '</option>');
+                    });
+                } else {
                     $('select[name="provider_id"]')
-                        .append('<option value="'+value['id']+'">' +value['name']+ '</option>');
-                });
-            }else{
-                $('select[name="provider_id"]')
                         .append('<option value="0"> لا يوجد نتائج تطابق هذة الاختيارات </option>');
+                }
             }
-        }
         });
     }
+
 </script>
 
 @endsection

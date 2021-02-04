@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController\ComplaintController;
+
 app()->setLocale('ar');
 Route::get('/', function () {
     return view('welcome');
@@ -27,14 +28,6 @@ Route::get('/get_sub_cat/{model}/{col}/{id}', function ($model, $col, $id) {
 
 Route::redirect('/login', '/admin/login');
 
-Route::get('/check-status/{id?}/{id1?}', 'Api\ProfileController@fatooraStatus');
-Route::get('/order-check-status/{id?}/{id1?}', 'Api\OrderController@fatooraStatus');
-Route::get('/fatoora/success', function () {
-    return view('fatoora');
-})->name('fatoora-success');
-Route::get('/fatoora/error', function () {
-    return view('fatoora-error');
-})->name('fatoora-error');
 
 /*admin panel routes*/
 
@@ -56,10 +49,6 @@ Route::prefix('admin')->group(function () {
         Route::get('setting', 'SettingController@index');
         Route::post('add/settings', 'SettingController@store');
 
-
-        // ================================vats====================================
-        Route::get('vats', 'HomeController@vat');
-
         // ================================about&terms====================================
         Route::get('pages/about', 'PageController@about');
         Route::post('add/pages/about', 'PageController@store_about');
@@ -67,32 +56,13 @@ Route::prefix('admin')->group(function () {
         Route::get('pages/terms', 'PageController@terms');
         Route::post('add/pages/terms', 'PageController@store_terms');
 
-
-        // ================================subscriptions====================================
-        Route::get('subscriptions', 'HomeController@subscriptions')->name('subscriptions.index');
-
-
-        //================================contacts===========================================
-        Route::get('/contacts', 'ContactsController@index')->name('contacts.index');
-        Route::get('/contacts/{contact}', 'ContactsController@show');
-        Route::get('/contact/reply', 'ContactsController@reply');
-        Route::get('/contacts/{contact}/delete', 'ContactsController@delete');
-
-
-        //================================topics===========================================
-        Route::get('/topics/{id}/delete', 'TopicController@destroy');
-        Route::resource('topics', 'TopicController');
-
-
         // ================================main-categories====================================
         Route::get('/main-categories/{category}/delete', 'MainCategoriesController@destroy');
         Route::resource('main-categories', 'MainCategoriesController');
 
-
         // ================================regions=============================================
         Route::get('/regions/{id}/delete', 'RegionController@destroy');
         Route::resource('regions', 'RegionController');
-
 
         // ================================cities=============================================
         Route::get('/cities/{id}/delete', 'CityController@destroy');
@@ -106,26 +76,16 @@ Route::prefix('admin')->group(function () {
         Route::post('/notifications/user', 'HomeController@postSendUserNotifications')->name('post-send-user-notifications');
 
 
-        // ================================ verifications =============================================
-        Route::get('/complaints/{id}/delete', [ComplaintController::class,'delete'])->name('complaints.delete');
-        Route::get('/complaints', [ComplaintController::class,'index'])->name('complaints.index');
-
-        // ================================ wallets ==========================================
-        Route::get('/charge-wallet', 'HomeController@getChargeWallet')->name('chargeWallet');
-        Route::post('/charge-wallet', 'HomeController@postChargeWallet')->name('chargeWalletPost');
-        Route::get('/pull-requests', 'HomeController@getPullRequests')->name('pullRequests.index');
-        Route::get('/pull-requests/{id}/update', 'HomeController@postPullRequests')->name('PullRequests.update');
-
-        // ================================services==========================================
-        Route::get('/services/{service}/delete', 'ServicesController@destroy');
-        Route::resource('services', 'ServicesController');
-
-
         // ================================orders=============================================
         Route::get('/orders', 'OrdersController@index')->name('orders.index');
         Route::get('/orders/canceled', 'OrdersController@canceled')->name('orders.canceled');
         Route::get('/orders/{order}', 'OrdersController@show')->name('orders.show');
         Route::get('/orders/{order}/delete', 'OrdersController@delete');
+
+
+        // ================================ complaints =============================================
+        Route::get('/complaints/{id}/delete', [ComplaintController::class,'delete'])->name('complaints.delete');
+        Route::get('/complaints', [ComplaintController::class,'index'])->name('complaints.index');
 
 
         // ================================splashs==============================================
@@ -135,7 +95,6 @@ Route::prefix('admin')->group(function () {
 
         // ===================================users============================================
         Route::get('users', 'UserController@index')->name('users.index');
-        Route::get('users/drivers', 'UserController@drivers')->name('drivers.index');
         Route::get('users/providers', 'UserController@providers')->name('providers.index');
         Route::get('users/create/{type}', 'UserController@create')->name('users.create');
         Route::post('users/{type}', 'UserController@store')->name('users.store');

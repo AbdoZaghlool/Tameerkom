@@ -15,7 +15,8 @@
         height: 450px;
         width: 700px;
     }
-</style>  
+
+</style>
 @endsection
 
 @section('page_header')
@@ -50,14 +51,14 @@
                 <div class="row">
                     <div class="caption font-dark">
                         <i class="icon-settings font-dark"></i>
-                        <span class="caption-subject bold uppercase">  تفاصيل الطلب رقم {{$order->id}}</span> 
+                        <span class="caption-subject bold uppercase"> تفاصيل الطلب رقم {{$order->id}}</span>
                     </div>
                     <div class="caption font-weight-light float-left" style="float: left; color:red;">
                         <i class="icon-arrow-up font-dark"></i>
-                        <span class="caption-subject bold uppercase"><a href="{{ url()->previous() }}">العودة للخلف</a></span> 
+                        <span class="caption-subject bold uppercase"><a href="{{ url()->previous() }}">العودة للخلف</a></span>
                     </div>
                 </div>
-                {{--  here is more details  --}}
+                {{-- here is more details  --}}
                 <div class="row">
                     <h3></h3>
                 </div>
@@ -70,7 +71,7 @@
                         <thead>
                             <tr>
                                 <th> رقم الطلب</th>
-                                <th> الاسرة</th>
+                                <th> المزودينة</th>
                                 <th> العميل </th>
                                 <th> السائق </th>
                                 <th> حالة الطلب </th>
@@ -105,12 +106,12 @@
 
                     </table>
                 -->
-                
+
 
                 @php
-                    $orderItems = unserialize($order->cart_items);
-                    $userAddress = App\UserAdresses::find($order->user_adresses_id) ;
-                    $family = $order->provider;
+                $orderItems = unserialize($order->cart_items);
+                $userAddress = App\UserAdresses::find($order->user_adresses_id) ;
+                $family = $order->provider;
                 @endphp
                 <!-- make table for products in order -->
 
@@ -132,31 +133,31 @@
                     <tbody>
                         @foreach ($orderItems as $item)
                         @php
-                            $product = App\Product::find($item->product_id);
+                        $product = App\Product::find($item->product_id);
                         @endphp
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>
                                 @if($product != null && $product->pictures()->first() != null)
-                                    <img src="{{asset('uploads/products/'.$product->pictures()->first()->image)}}" height="100px;" width="100px;">
+                                <img src="{{asset('uploads/products/'.$product->pictures()->first()->image)}}" height="100px;" width="100px;">
                                 @else
-                                    المنتج غير متوفر حاليا
+                                المنتج غير متوفر حاليا
                                 @endif
                             </td>
                             <td>{{$product->name ?? 'غير متوفر'}}</td>
                             <td>{{$product->price ?? 0}} ريال</td>
                             <td>
                                 @if($item->additions != null)
-                                    @foreach ($item->getAdditions($item->additions) as $addition)
-                                        {{$addition['name'] }} ( {{($addition['price'])}} ريال) <br>
-                                    @endforeach
+                                @foreach ($item->getAdditions($item->additions) as $addition)
+                                {{$addition['name'] }} ( {{($addition['price'])}} ريال) <br>
+                                @endforeach
                                 @endif
                             </td>
                             <td>
                                 @if($item->more_additions != null)
-                                    @foreach ($item->getAdditions($item->more_additions) as $addition)
-                                        {{$addition['name'] }} ( {{($addition['price'])}} ريال) <br>
-                                    @endforeach
+                                @foreach ($item->getAdditions($item->more_additions) as $addition)
+                                {{$addition['name'] }} ( {{($addition['price'])}} ريال) <br>
+                                @endforeach
                                 @endif
                             </td>
                             <td>
@@ -176,9 +177,9 @@
         </div>
         <!-- END EXAMPLE TABLE PORTLET-->
 
-        {{--  <div id="map"></div>  --}}
+        {{-- <div id="map"></div>  --}}
 
-        
+
     </div>
 </div>
 
@@ -194,31 +195,32 @@
 
 <script>
     $(document).ready(function() {
-            var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
-            $('body').on('click', '.delete_attribute', function() {
-                var id = $(this).attr('data');
-                var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق",
-                    closeOnConfirm: false
-                }, function() {
-                    window.location.href = "{{ url('/') }}" + "/admin/orders/"+id+"/delete";
-                });
+        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
+        $('body').on('click', '.delete_attribute', function() {
+            var id = $(this).attr('data');
+            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+                , closeOnConfirm: false
+            }, function() {
+                window.location.href = "{{ url('/') }}" + "/admin/orders/" + id + "/delete";
             });
         });
+    });
+
 </script>
 
 
 
 
-{{--  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFUMq5htfgLMNYvN4cuHvfGmhe8AwBeKU&callback=initMap" async
+{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFUMq5htfgLMNYvN4cuHvfGmhe8AwBeKU&callback=initMap" async
     defer></script>  --}}
 
 @endsection

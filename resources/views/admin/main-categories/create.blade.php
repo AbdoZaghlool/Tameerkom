@@ -18,7 +18,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="/admin/main-categories">التصنيفات</a>
+            <a href="/admin/main-categories">الاقسام</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -27,7 +27,7 @@
     </ul>
 </div>
 
-<h1 class="page-title"> التصنيفات
+<h1 class="page-title"> الاقسام
     <small>اضافة تصنيف</small>
 </h1>
 @endsection
@@ -46,8 +46,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="portlet light ">
-                        <form role="form" action="{{route('main-categories.store')}}" method="post"
-                            enctype="multipart/form-data">
+                        <form role="form" action="{{route('main-categories.store')}}" method="post" enctype="multipart/form-data">
                             <input type='hidden' name='_token' value='{{Session::token()}}'>
 
 
@@ -58,9 +57,8 @@
                                     <div class="tab-pane active" id="tab_1_1">
 
                                         <div class="form-group">
-                                            <label class="control-label"> اسم التصنيف </label>
-                                            <input type="text" name="name" class="form-control"
-                                                placeholder="أسم التصنيف" />
+                                            <label class="control-label"> اسم القسم </label>
+                                            <input type="text" name="name" class="form-control" placeholder="أسم القسم" />
                                             @if ($errors->has('name'))
                                             <span class="help-block">
                                                 <strong style="color: red;">{{ $errors->first('name') }}</strong>
@@ -68,7 +66,28 @@
                                             @endif
                                         </div>
 
-                                        
+                                        {{-- <!-- image -->  --}}
+                                        <div class="form-body">
+                                            <div class="form-group {{$errors->has('image')?'has-error':''}} ">
+                                                <label class="control-label col-md-3">الصورة الشخصية</label>
+                                                <div class="col-md-9">
+                                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                                        </div>
+                                                        <div>
+                                                            <span class="btn red btn-outline btn-file">
+                                                                <span class="fileinput-new"> اختر الصورة </span>
+                                                                <span class="fileinput-exists"> تغيير </span>
+                                                                <input type="file" name="image"> </span>
+                                                            <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
+                                                        </div>
+                                                    </div>
+                                                    @error('image')
+                                                    <span class="status-error">{{ $errors->first('image') }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </div>
 
@@ -76,8 +95,7 @@
                             </div>
                             <div class="margiv-top-10">
                                 <div class="form-actions">
-                                    <button type="submit" class="btn green" value="حفظ"
-                                        onclick="this.disabled=true;this.value='تم الارسال, انتظر...';this.form.submit();">حفظ</button>
+                                    <button type="submit" class="btn green" value="حفظ" onclick="this.disabled=true;this.value='تم الارسال, انتظر...';this.form.submit();">حفظ</button>
 
                                 </div>
                             </div>

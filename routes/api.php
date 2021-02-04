@@ -44,7 +44,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::get('/topics/{topic_id}/{lat}/{long}', [MainController::class, 'topics']);
     Route::get('/all-topics', [MainController::class, 'allTopics']);
     Route::get('/all-categories', [MainController::class, 'allCategories']);
-    Route::get('/categories/{provider_id}', [MainController::class, 'mainCat']);
+    Route::get('/categories/{category_id?}', [MainController::class, 'mainCat']);
     Route::get('/families/{lat}/{long}/{filter}', [MainController::class, 'families']);
 
     Route::post('check-discount-code', [MainController::class, 'checkDiscountCode']);

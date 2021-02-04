@@ -144,7 +144,7 @@ class OrderController extends Controller
             //there is no drivers in our region right now return to user to offer him recive from family by himself
             $err = [
                 'key' => 'no_drivers',
-                'value' => 'لا يوجد مندوب توصيل حاليا هل تريد الاستلام بنفسك من مقر الاسرة؟',
+                'value' => 'لا يوجد مندوب توصيل حاليا هل تريد الاستلام بنفسك من مقر المزودينة؟',
                 'order_id' => $order->id,
             ];
             return ApiController::respondWithErrorArray($err);
@@ -214,7 +214,7 @@ class OrderController extends Controller
 
         $arr = [
             'key' => 'order_saved',
-            'value' => 'تم استلام طلبك برجاء الانتظار لحين موافقة الاسرة علي الموعد',
+            'value' => 'تم استلام طلبك برجاء الانتظار لحين موافقة المزودينة علي الموعد',
             'order_id' => $order->id,
         ];
         return ApiController::respondWithSuccess(array($arr));
@@ -256,7 +256,7 @@ class OrderController extends Controller
         if (count($offers) > 0) {
             $deleted = OrderOffer::destroy($offers);
         }
-        return ApiController::respondWithSuccess('تم تأكيد استلام طلبك من الاسرة بنفسك');
+        return ApiController::respondWithSuccess('تم تأكيد استلام طلبك من المزودينة بنفسك');
     }
 
     /**

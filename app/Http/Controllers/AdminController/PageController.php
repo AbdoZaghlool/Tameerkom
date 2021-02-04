@@ -6,7 +6,6 @@ use App\AboutUs;
 use App\TermsCondition;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Text;
 use Illuminate\Support\Facades\Redirect;
 
 class PageController extends Controller
@@ -31,9 +30,9 @@ class PageController extends Controller
         $this->validate($request, [
             'content' => 'required|string',
         ]);
-        AboutUs::first()->update([
-                'content'=>$request->content
-            ]);
+        AboutUs::updateOrCreate(['id'=>1], [
+            'content'=>$request->content
+        ]);
         return Redirect::back()->with('success', 'تم حفظ البيانات بنجاح');
     }
 
@@ -57,43 +56,9 @@ class PageController extends Controller
         $this->validate($request, [
             'content' => 'required|string',
         ]);
-        TermsCondition::first()->update([
+        TermsCondition::updateOrCreate(['id'=>1], [
                 'content'=>$request->content
             ]);
         return Redirect::back()->with('success', 'تم حفظ البيانات بنجاح');
-    }
-
-    /**
-     * get view for texts in application
-     * @return void
-     */
-    public function texts()
-    {
-        $settings = Text::get();
-        return view('admin.pages.texts', compact('settings'));
-    }
-
-    /**
-     * update content of all texts in one shoot
-     * @param Request $request
-     * @return void
-     */
-    public function store_texts(Request $request)
-    {
-        // dd($request->all());
-        $this->validate($request, [
-            '1'=>'nullable',
-            '2'=>'nullable',
-            '3'=>'nullable',
-            '4'=>'nullable',
-            '5'=>'nullable'
-        ]);
-        foreach ($request->except('_token') as $key => $value) {
-            Text::find($key)->update([
-                'content'=>$value
-            ]);
-        }
-        flash('تم تعديل المحتويات بنجاح');
-        return back();
     }
 }

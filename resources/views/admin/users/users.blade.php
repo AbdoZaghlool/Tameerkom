@@ -59,19 +59,10 @@
                     id="sample_1">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
-                                    <span></span>
-                                </label>
-                            </th>
-                            
-                            <th> رقم العميل</th>
+                            <th> رقم المستخدم</th>
                             <th> الاسم</th>
                             <th>رقم الهاتف</th>
                             <th>التفعيل</th>
-                            {{--  <th>الحظر</th>  --}}
-                            {{--  <th>التوثيق</th>  --}}
                             <th> العمليات </th>
                         </tr>
                     </thead>
@@ -79,13 +70,6 @@
                         <?php $i=0 ?>
                         @foreach($users as $user)
                         <tr class="odd gradeX">
-                            <td>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes" value="1" />
-                                    <span></span>
-                                </label>
-                            </td>
-                            
                             <td> {{$user->id}} </td>
                             <td> {{$user->name}} </td>
                             <td>{{$user->phone_number}}</td>

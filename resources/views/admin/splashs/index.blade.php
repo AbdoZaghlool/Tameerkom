@@ -52,13 +52,12 @@
                     </div>
                 </div>
 
-                <table class="table table-striped table-bordered table-hover table-checkable order-column"
-                    id="sample_1">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
                             <th>رقم البانر</th>
                             <th>الصورة</th>
-                            <th>الاسرة</th>
+                            <th>المنتج</th>
                             <th>الرابط</th>
                             <th> العمليات </th>
                         </tr>
@@ -68,19 +67,17 @@
                         <tr class="odd gradeX">
                             <td>{{$page->id}}</td>
                             <td class="no_dec">
-                                <img src="{{asset('uploads/sliders/'.$page->image)}}"
-                                    style="height: 50px; width: 100px;">
+                                <img src="{{asset('uploads/sliders/'.$page->image)}}" style="height: 50px; width: 100px;">
                             </td>
                             <td>
-                                @if ($page->provider_id)
-                                    <a href="{{route('users.edit',$page->family->id)}}">{{$page->family->name}}</a>
+                                @if ($page->product_id)
+                                <a href="{{route('products.edit',$page->product->id)}}">{{$page->product->name}}</a>
                                 @endif
                             </td>
                             <td>{{$page->link}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs green dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-expanded="false"> العمليات
+                                    <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> العمليات
                                         <i class="fa fa-angle-down"></i>
                                     </button>
                                     <ul class="dropdown-menu pull-left" role="menu">
@@ -92,8 +89,7 @@
                                         </li>
                                         @if( $page->id > 1 )
                                         <li>
-                                            <a class="delete_data" data="{{ $page->id }}"
-                                                data_name="{{ $page->title }}">
+                                            <a class="delete_data" data="{{ $page->id }}" data_name="{{ $page->title }}">
                                                 <i class="fa fa-times"></i> حذف
                                             </a>
                                         </li>
@@ -140,27 +136,28 @@
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
 
 <script>
-    $( document ).ready(function () {
-            $('body').on('click', '.delete_data', function() {
-                var id = $(this).attr('data');
-                var swal_text = 'حذف ' + $(this).attr('data_name');
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
+    $(document).ready(function() {
+        $('body').on('click', '.delete_data', function() {
+            var id = $(this).attr('data');
+            var swal_text = 'حذف ' + $(this).attr('data_name');
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
 
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق"
-                }, function() {
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+            }, function() {
 
-                    window.location.href = "{{ url('/') }}" + "/admin/splashs/"+id+"/delete" ;
-
-                });
+                window.location.href = "{{ url('/') }}" + "/admin/splashs/" + id + "/delete";
 
             });
+
         });
+    });
+
 </script>
 @endsection

@@ -40,14 +40,13 @@
         <div class="portlet light bordered">
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-hover order-column"
-                    id="sample_1">
+                <table class="table table-striped table-bordered table-hover order-column" id="sample_1">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>رقم الطلب</th>
                             <th>مرسل الشكوى</th>
-                            <th>الاسرة</th>
+                            <th>المزودينة</th>
                             <th>السائق</th>
                             <th>تفاصيل الشكوى</th>
 
@@ -68,26 +67,24 @@
                             </td>
                             <td class="no_dec">
                                 @if ($record->order->driver_id)
-                                    <a href="{{route('users.edit',['id' => $record->order->driver_id])}}">{{ $record->order->driver->name }}</a>
+                                <a href="{{route('users.edit',['id' => $record->order->driver_id])}}">{{ $record->order->driver->name }}</a>
                                 @endif
                             </td>
                             <td class="no_dec">{{ $record->content }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs green dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-expanded="false"> العمليات
+                                    <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> العمليات
                                         <i class="fa fa-angle-down"></i>
                                     </button>
                                     <ul class="dropdown-menu pull-left" role="menu">
 
-                                        {{--  <li>
+                                        {{-- <li>
                                             <a href="{{ route('cities.edit',['id'=>$record]) }}">
-                                                <i class="icon-pencil"></i> تعديل
-                                            </a>
-                                        </li>  --}}
+                                        <i class="icon-pencil"></i> تعديل
+                                        </a>
+                                        </li> --}}
                                         <li>
-                                            <a class="delete_data" data="{{ $record->id }}"
-                                                data_name="{{ $record->name }}">
+                                            <a class="delete_data" data="{{ $record->id }}" data_name="{{ $record->name }}">
                                                 <i class="fa fa-times"></i> حذف
                                             </a>
                                         </li>
@@ -132,28 +129,29 @@
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
 
 <script>
-    $( document ).ready(function () {
-            $('body').on('click', '.delete_data', function() {
-                var id = $(this).attr('data');
-                // console.log(id);
-                var swal_text = 'حذف ' + $(this).attr('data_name');
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
+    $(document).ready(function() {
+        $('body').on('click', '.delete_data', function() {
+            var id = $(this).attr('data');
+            // console.log(id);
+            var swal_text = 'حذف ' + $(this).attr('data_name');
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
 
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق"
-                }, function() {
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+            }, function() {
 
-                    window.location.href = "{{ url('/') }}" + "/admin/complaints/"+id+"/delete" ;
-
-                });
+                window.location.href = "{{ url('/') }}" + "/admin/complaints/" + id + "/delete";
 
             });
+
         });
+    });
+
 </script>
 @endsection

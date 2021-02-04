@@ -22,45 +22,17 @@ class AuthUserController extends Controller
     public function registerMobile(Request $request)
     {
         $rules = [
-            'phone_number' => 'required|starts_with:05|digits:10',
-            'type' => 'required|in:0,1,2',
+            'phone_number' => 'required|unique:users|starts_with:05|digits:10',
             'app_signature' => 'required',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
-        $oldAccounts = User::where('phone_number', $request->phone_number)->get();
-        if ($oldAccounts->count() > 0) {
-            $oldTypes = $oldAccounts->pluck('type')->toArray();
-            if (in_array($request->type, $oldTypes)) {
-                $err = [
-                    'key' => 'phone_number_exists_before', 'value' => 'هذا الرقم مسجل من قبل ',
-                ];
-                return ApiController::respondWithErrorArray($err);
-            }
-        }
-    
-        $result = substr($request->phone_number, 1);
-        $phone = '00966' . $result;
 
         $code = mt_rand(1000, 9999);
-        $jsonObj = array(
-            'mobile' => 'tqnee.com.sa',
-            'password' => '589935sa',
-            'sender' => 'TQNEE',
-            'numbers' => $phone,
-            'msg' => '<#> كود التأكيد الخاص بك في هوم ميد هو :' . $code . ' لا تقم بمشاركة هذا الكود مع اي شخص ' . $request->app_signature,
-            'msgId' => rand(1, 99999),
-            'timeSend' => '0',
-            'dateSend' => '0',
-            'deleteKey' => '55348',
-            'lang' => '3',
-            'applicationType' => 68,
-        );
-
-        $result = $this->sendSMS($jsonObj);
-        $created = App\PhoneVerification::updateOrCreate(['phone_number' => $request->phone_number], [
+        $result = $this->sendSMS($request, $code);
+        App\PhoneVerification::updateOrCreate(['phone_number' => $request->phone_number], [
             'code' => $code,
         ]);
         return ApiController::respondWithSuccess('تم ارسال الكود بنجاح');
@@ -125,24 +97,8 @@ class AuthUserController extends Controller
         }
 
         $code = mt_rand(1000, 9999);
-        $result = substr($request->phone_number, 1);
-        $phone = '00966' . $result;
-        $jsonObj = array(
-            'mobile' => 'tqnee.com.sa',
-            'password' => '589935sa',
-            'sender' => 'TQNEE',
-            'numbers' => $phone,
-            'msg' => '<#> كود التأكيد الخاص بك في هوم ميد هو :' . $code . ' لا تقم بمشاركة هذا الكود مع اي شخص ' . $request->app_signature,
-            'msgId' => rand(1, 99999),
-            'timeSend' => '0',
-            'dateSend' => '0',
-            'deleteKey' => '55348',
-            'lang' => '3',
-            'applicationType' => 68,
-        );
-        // دالة الإرسال JOSN
-        $result = $this->sendSMS($jsonObj);
-
+        $result = $this->sendSMS($request, $code);
+        
         $created = App\PhoneVerification::updateOrCreate(['phone_number' => $request->phone_number], [
             'code' => $code,
         ]);
@@ -160,85 +116,36 @@ class AuthUserController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'type' => 'required|in:0,1,2',
-            'phone_number' => 'required|starts_with:05|digits:10',
-            'name' => 'required|max:255',
-            'brief' => 'sometimes',
-            'image' => 'required_if:type,1,2|mimes:jpeg,bmp,png,jpg|max:3000',
-            'password' => 'required|string|min:6',
+            'type'                  => 'required|in:0,1',
+            'phone_number'          => 'required|unique:users|starts_with:05|digits:10',
+            'name'                  => 'required|max:255',
+            'image'                 => 'required_if:type,1|mimes:jpeg,bmp,png,jpg|max:3000',
+            'password'              => 'required|string|min:6',
             'password_confirmation' => 'required|same:password',
-            'device_token' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'email' => 'sometimes|email|unique:users',
-            'tax_number' => 'sometimes', // required_if:type,1'
-            'topic_id' => 'sometimes|array|exists:topics,id', // required_if:type,1'
-            'work_start_at' => 'sometimes', // required_if:type,1'
-            'work_end_at' => 'sometimes', // required_if:type,1'
-            'region_id' => 'sometimes', // required_if:type,1,2'
-            'city_id' => 'sometimes', // required_if:type,1,2'
-            'bank_name' => 'sometimes', // required_if:type,1,2'
-            'bank_user_name' => 'sometimes', // required_if:type,1,2'
-            'account_number' => 'sometimes', // required_if:type,1,2'
-            'insurance_number' => 'sometimes', // required_if:type,1,2'
-            'identity_number' => 'sometimes', // required_if:type,1,2'
-            'driver_license' => 'sometimes', // required_if:type,2'
-            'driver_type_id' => 'sometimes', // required_if:type,2'
-            'car_license' => 'sometimes|mimes:jpeg,jpg,png|max:3000', // required_if:type,2'
+            'device_token'          => 'required',
+            'latitude'              => 'required',
+            'longitude'             => 'required',
+            'email'                 => 'sometimes|email|unique:users',
+            'commercial_record'     => 'sometimes|required_if:type,1',
+            'city_id'               => 'sometimes|required_if:type,1',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
 
-        $oldAccounts = User::where('phone_number', $request->phone_number)->get();
-        if ($oldAccounts->count() > 0) {
-            $oldTypes = $oldAccounts->pluck('type')->toArray();
-            if (in_array($request->type, $oldTypes)) {
-                $err = [
-                    'key' => 'phone_number_exists_before', 'value' => 'هذا الرقم مسجل من قبل ',
-                ];
-                return ApiController::respondWithErrorArray($err);
-            }
-        }
-    
-        if ($request->type != 0) {
-            $oldIdNumbers = User::where('identity_number', $request->identity_number)->get();
-            if ($oldIdNumbers->count() > 0) {
-                $oldTypes = $oldIdNumbers->pluck('type')->toArray();
-                if (in_array($request->type, $oldTypes)) {
-                    $err = [
-                    'key' => 'identity_number_exists_before', 'value' => 'رقم الهوية مسجل من قبل ',
-                ];
-                    return ApiController::respondWithErrorArray($err);
-                }
-            }
-        }
-
         $user = App\User::create([
-            'phone_number' => $request->phone_number,
-            'name' => $request->name,
-            'brief' => $request->brief,
-            'type' => $request->type,
-            'password' => Hash::make($request->password),
-            'image' => $request->image == null ? null : UploadImage($request->file('image'), 'user', '/uploads/users'),
-            'email' => $request->email,
-            'region_id' => $request->region_id,
-            'city_id' => $request->city_id,
-            'active' => $request->type == 0 ? 1 : 0,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'tax_number' => $request->tax_number,
-            'bank_name' => $request->bank_name,
-            'bank_user_name' => $request->bank_user_name,
-            'account_number' => $request->account_number,
-            'insurance_number' => $request->insurance_number,
-            'driver_license' => $request->driver_license,
-            'type_id' => $request->driver_type_id,
-            'car_license' => $request->file('car_license') == null ? null : UploadImage($request->file('car_license'), 'car', '/uploads/cars'),
-            'identity_number' => $request->identity_number,
-            'work_start_at' => $request->work_start_at,
-            'work_end_at' => $request->work_end_at,
+            'name'              => $request->name,
+            'phone_number'      => $request->phone_number,
+            'password'          => Hash::make($request->password),
+            'active'            => $request->type == 0 ? 1 : 0,
+            'type'              => $request->type,
+            'latitude'          => $request->latitude,
+            'longitude'         => $request->longitude,
+            'email'             => $request->email,
+            'city_id'           => $request->city_id,
+            'commercial_record' => $request->commercial_record,
+            'image'             => $request->image == null ? null : UploadImage($request->file('image'), 'user', '/uploads/users'),
         ]);
         Auth::guard('api')->check(['phone_number' => $request->phone_number, 'password' => $request->password]);
         $token = generateApiToken($user->id, 15);
@@ -247,18 +154,6 @@ class AuthUserController extends Controller
             'device_token' => $request->device_token,
         ]);
 
-        if ($request->type == 1 && $request->topic_id != null) {
-            $user->topics()->attach($request->topic_id);
-        }
-
-        if ($request->type == 0) {
-            event(new \App\Events\ClientRegisterdEvent($user));
-        }
-
-        $wallet = ApiController::createUserWallet($user->id);
-        if ($request->type == 0) {
-            $cart = App\Cart::create(['user_id' => $user->id]);
-        }
         $savedUser = array(new UserResource($user));
         return $user ? ApiController::respondWithSuccess($savedUser) : ApiController::respondWithServerErrorArray();
     }
@@ -275,7 +170,6 @@ class AuthUserController extends Controller
             'phone_number' => 'required',
             'password' => 'required',
             'device_token' => 'required',
-            'type' => 'required|in:0,1,2',
             'latitude' => 'sometimes|required',
             'longitude' => 'sometimes|required',
         ];
@@ -284,7 +178,7 @@ class AuthUserController extends Controller
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
 
-        if ($check = Auth::attempt(['phone_number' => $request->phone_number, 'password' => $request->password, 'type' => $request->type])) {
+        if ($check = Auth::attempt(['phone_number' => $request->phone_number, 'password' => $request->password])) {
             $user = User::where('phone_number', $request->phone_number)->where('type', $request->type)->first();
 
             $token = generateApiToken($user->id, 15);
@@ -306,7 +200,6 @@ class AuthUserController extends Controller
                 $created = $user->devices()->updateOrCreate([
                     'device_token' => $request->device_token,
                 ]);
-                // $created = UserDevice::updateOrCreate(['user_id'=>$user->id],['device_token'=>$request->device_token]);
             }
 
             return $created
@@ -317,9 +210,6 @@ class AuthUserController extends Controller
             if ($user == null) {
                 $phone = ['key' => 'phone_number', 'value' => 'رقم الهاتف غير صحيح'];
                 return ApiController::respondWithErrorClient(array($phone));
-            } elseif ($user->type != $request->type) {
-                $type = ['key' => 'user_type', 'value' => 'مستخدم غير صحيح'];
-                return ApiController::respondWithErrorClient(array($type));
             } else {
                 $password = ['key' => 'password', 'value' => ' الرقم السري غير صحيح'];
                 return ApiController::respondWithErrorClient(array($password));
@@ -336,42 +226,19 @@ class AuthUserController extends Controller
     public function forgetPassword(Request $request)
     {
         $rules = [
-            'phone_number' => 'required|numeric',
+            'phone_number'  => 'required|numeric',
             'app_signature' => 'required',
-            'type' => 'required|in:0,1,2',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
-        $user = App\User::where('phone_number', $request->phone_number)->where('type', $request->type)->first();
+        $user = App\User::where('phone_number', $request->phone_number)->first();
 
         if ($user) {
-            if ($user->type != $request->type) {
-                $errors = [
-                    'key' => 'user_type',
-                    'value' => 'نوع المستخدم غير صحيح',
-                ];
-                return ApiController::respondWithErrorArray($errors);
-            }
             $code = mt_rand(1000, 9999);
-            $result = substr($request->phone_number, 1);
-            $phone = '00966' . $result;
-            $jsonObj = array(
-                'mobile' => 'tqnee.com.sa',
-                'password' => '589935sa',
-                'sender' => 'TQNEE',
-                'numbers' => $phone,
-                'msg' => '<#> كود التأكيد الخاص بك في هوم ميد هو :' . $code . ' لا تقم بمشاركة هذا الكود مع اي شخص ' . $request->app_signature,ure,
-                'msgId' => rand(1, 99999),
-                'timeSend' => '0',
-                'dateSend' => '0',
-                'deleteKey' => '55348',
-                'lang' => '3',
-                'applicationType' => 68,
-            );
-            // دالة الإرسال JOSN
-            $result = $this->sendSMS($jsonObj);
+            $this->sendSMS($request, $code);
+            
             $updated = $user->update([
                 'verification_code' => $code,
             ]);
@@ -443,25 +310,16 @@ class AuthUserController extends Controller
     {
         $rules = [
             'phone_number' => 'required|numeric',
-            'type' => 'required|in:0,1,2',
-            'password' => 'required',
+            'password'     => 'required|min:6',
             'password_confirmation' => 'required|same:password',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
-        $user = App\User::where('phone_number', $request->phone_number)->where('type', $request->type)->first();
+        $user = App\User::where('phone_number', $request->phone_number)->first();
         //        $user = User::wherePhone($request->phone)->first();
         if ($user) {
-            if ($user->type != $request->type) {
-                $errors = [
-                    'key' => 'user_type',
-                    'value' => 'نوع المستخدم غير صحيح',
-                ];
-                return ApiController::respondWithErrorArray($errors);
-            }
-
             $updated = $user->update(['password' => Hash::make($request->password)]);
         } else {
             $errorsLogin = [
@@ -499,9 +357,7 @@ class AuthUserController extends Controller
         if (!(Hash::check($request->current_password, auth('api')->user()->password))) {
             return ApiController::respondWithErrorNOTFoundObject(array($error_old_password));
         }
-        //        if( strcmp($request->current_password, $request->new_password) == 0 )
-        //            return response()->json(['status' => 'error', 'code' => 404, 'message' => 'New password cant be the same as the old one.']);
-        //update-password-finally ^^
+
         $updated = auth('api')->user()->update(['password' => Hash::make($request->new_password)]);
         $success_password = [
             'key' => 'message',
@@ -521,45 +377,16 @@ class AuthUserController extends Controller
     public function change_phone_number(Request $request)
     {
         $rules = [
-            'phone_number' => 'required|starts_with:05|digits:10',
+            'phone_number'  => 'required|unique:users|starts_with:05|digits:10',
             'app_signature' => 'required',
-            'type' => 'required|in:0,1,2',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
 
-        $oldAccounts = User::where('phone_number', $request->phone_number)->get();
-        if ($oldAccounts->count() > 0) {
-            $oldTypes = $oldAccounts->pluck('type')->toArray();
-            if (in_array($request->type, $oldTypes)) {
-                $err = [
-                    'key' => 'phone_number_exists_before', 'value' => 'هذا الرقم مسجل من قبل ',
-                ];
-                return ApiController::respondWithErrorArray($err);
-            }
-        }
-
-        $result = substr($request->phone_number, 1);
-        $phone = '00966' . $result;
         $code = mt_rand(1000, 9999);
-        // dd($phone);
-        $jsonObj = array(
-            'mobile' => 'tqnee.com.sa',
-            'password' => '589935sa',
-            'sender' => 'TQNEE',
-            'numbers' => $phone,
-            'msg' => '<#> كود التأكيد الخاص بك في هوم ميد هو :' . $code . ' لا تقم بمشاركة هذا الكود مع اي شخص ' . $request->app_signature,
-            'msgId' => rand(1, 99999),
-            'timeSend' => '0',
-            'dateSend' => '0',
-            'deleteKey' => '55348',
-            'lang' => '3',
-            'applicationType' => 68,
-        );
-        // دالة الإرسال JOSN
-        $result = $this->sendSMS($jsonObj);
+        $this->sendSMS($request, $code);
         $updated = App\User::where('id', auth('api')->user()->id)->update([
             'verification_code' => $code,
         ]);
@@ -636,11 +463,12 @@ class AuthUserController extends Controller
     public function changeInfo(Request $request)
     {
         $rules = [
-            'name' => 'sometimes',
-            'email' => 'sometimes',
-            'latitude' => 'sometimes',
-            'longitude' => 'sometimes',
-            'image' => 'sometimes|mimes:jpeg,bmp,png,jpg|max:5000',
+            'name'              => 'sometimes',
+            'email'             => 'sometimes',
+            'commercial_record' => 'sometimes',
+            'latitude'          => 'sometimes',
+            'longitude'         => 'sometimes',
+            'image'             => 'sometimes|mimes:jpeg,bmp,png,jpg|max:5000',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -673,8 +501,26 @@ class AuthUserController extends Controller
      * @param [type] $jsonObj
      * @return void
      */
-    public function sendSMS($jsonObj)
+    public function sendSMS($request, $code)
     {
+        $result = substr($request->phone_number, 1);
+        $phone = '00966' . $result;
+
+        $jsonObj = array(
+            'mobile'          => 'tqnee.com.sa',
+            'password'        => '589935sa',
+            'sender'          => 'TQNEE',
+            'numbers'         => $phone,
+            'msg'             => '<#> كود التأكيد الخاص بك في تعميركم هو :'
+            . $code . ' لا تقم بمشاركة هذا الكود مع اي شخص ' . $request->app_signature,
+            'msgId'           => rand(1, 99999),
+            'timeSend'        => '0',
+            'dateSend'        => '0',
+            'deleteKey'       => '55348',
+            'lang'            => '3',
+            'applicationType' => 68,
+        );
+
         $contextOptions['http'] = array('method' => 'POST', 'header' => 'Content-type: application/json', 'content' => json_encode($jsonObj), 'max_redirects' => 0, 'protocol_version' => 1.0, 'timeout' => 10, 'ignore_errors' => true);
         $contextResouce = stream_context_create($contextOptions);
         $url = "http://www.alfa-cell.com/api/msgSend.php";

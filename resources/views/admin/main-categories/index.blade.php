@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-التصنيفات
+الاقسام
 @endsection
 
 @section('styles')
@@ -19,17 +19,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ url('admin/main-categories') }}">التصنيفات</a>
+            <a href="{{ url('admin/main-categories') }}">الاقسام</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض التصنيفات</span>
+            <span>عرض الاقسام</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title"> التصنيفات
-    {{--<small>عرض جميع التصنيفات</small>--}}
+<h1 class="page-title"> الاقسام
+    {{--<small>عرض جميع الاقسام</small>--}}
 </h1>
 @include('flash::message')
 @endsection
@@ -52,20 +52,12 @@
 
                     </div>
                 </div>
-                <table class="table table-striped table-bordered table-hover table-checkable order-column"
-                    id="sample_1">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
-                                    <span></span>
-                                </label>
-                            </th>
-                            <th> أسم التصنيف </th>
+                            <th>#</th>
+                            <th> أسم القسم </th>
                             <th>عدد المنتجات</th>
-                            {{--  <th>الدولة</th>
-                            <th> ترتيب التصنيف </th>  --}}
                             <th> العمليات </th>
                         </tr>
                     </thead>
@@ -73,21 +65,13 @@
 
                         @foreach( $records as $category )
                         <tr class="odd gradeX">
-                            <td>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes" value="1" />
-                                    <span></span>
-                                </label>
-                            </td>
+                            <td>{{$loop->iteration}}</td>
                             <td class="no_dec">{{ $category->name }}</td>
                             <td class="no_dec">{{ $category->products->count() }}</td>
-                            {{--  <td class="no_dec">{{ $category->country->name }}</td>
-                            <td class="no_dec">{{ $category->sort }}</td>  --}}
 
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs green dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-expanded="false"> العمليات
+                                    <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> العمليات
                                         <i class="fa fa-angle-down"></i>
                                     </button>
                                     <ul class="dropdown-menu pull-left" role="menu">
@@ -97,17 +81,13 @@
                                                 <i class="icon-pencil"></i> تعديل
                                             </a>
                                         </li>
-                                        {{-- @if( auth()->guard('admin')->user()->id != $category->id ) --}}
                                         <li>
-                                            <a class="delete_data" data="{{ $category->id }}"
-                                                data_name="{{ $category->name }}">
+                                            <a class="delete_data" data="{{ $category->id }}" data_name="{{ $category->name }}">
                                                 <i class="fa fa-times"></i> حذف
                                             </a>
                                         </li>
-                                        {{-- @endif --}}
                                     </ul>
                                 </div>
-                                {{--@endif--}}
                             </td>
                         </tr>
                         @endforeach
@@ -147,28 +127,29 @@
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
 
 <script>
-    $( document ).ready(function () {
-            $('body').on('click', '.delete_data', function() {
-                var id = $(this).attr('data');
-                // console.log(id);
-                var swal_text = 'حذف ' + $(this).attr('data_name');
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
+    $(document).ready(function() {
+        $('body').on('click', '.delete_data', function() {
+            var id = $(this).attr('data');
+            // console.log(id);
+            var swal_text = 'حذف ' + $(this).attr('data_name');
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
 
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق"
-                }, function() {
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+            }, function() {
 
-                    window.location.href = "{{ url('/') }}" + "/admin/main-categories/"+id+"/delete" ;
-
-                });
+                window.location.href = "{{ url('/') }}" + "/admin/main-categories/" + id + "/delete";
 
             });
+
         });
+    });
+
 </script>
 @endsection

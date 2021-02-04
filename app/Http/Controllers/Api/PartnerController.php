@@ -189,7 +189,7 @@ class PartnerController extends Controller
         if ($this->family->id != $order->provider_id) {
             $err = [
                 'key' => 'family',
-                'value'=> 'اسرة غير صحيحة'
+                'value'=> 'مزود غير صحيحة'
             ];
             return ApiController::respondWithErrorArray($err);
         }
@@ -198,7 +198,7 @@ class PartnerController extends Controller
             ->get()
             ->pluck('device_token')
             ->toArray();
-        $title = 'رد الاسرة ';
+        $title = 'رد المزودينة ';
         $body = 'هذا الوقت غير مناسب لتسليم الطلب لا يمكن الطلب قبل ' . $request->suitable_date;
         if ($devicesTokens) {
             sendMultiNotification($title, $body, $devicesTokens, $order->id);
@@ -235,7 +235,7 @@ class PartnerController extends Controller
         if ($this->family->id != $order->provider_id) {
             $err = [
                 'key' => 'family',
-                'value'=> 'اسرة غير صحيحة'
+                'value'=> 'مزود غير صحيحة'
             ];
             return ApiController::respondWithErrorArray($err);
         }
@@ -278,7 +278,7 @@ class PartnerController extends Controller
             ->pluck('device_token')
             ->toArray();
         $title = 'قبول الطلب';
-        $body = 'تم قبول طلبك من قبل الاسرة';
+        $body = 'تم قبول طلبك من قبل المزودينة';
         if ($devicesTokens) {
             sendMultiNotification($title, $body, $devicesTokens, $order->id);
         }
@@ -316,7 +316,7 @@ class PartnerController extends Controller
                 ->pluck('device_token')
                 ->toArray();
             $title = 'no_drivers';
-            $body = 'لا يوجد سائقين حاليا هل تريد الاستلام بنفسك من مقر الاسرة؟';
+            $body = 'لا يوجد سائقين حاليا هل تريد الاستلام بنفسك من مقر المزودينة؟';
             if ($devicesTokens) {
                 sendMultiNotification($title, $body, $devicesTokens, $order->id);
             }

@@ -39,24 +39,16 @@ class MainCategoriesController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
+            'image' => 'required|mimes:png,jpg,jpeg|max:3072',
         ]);
         Category::create([
             'name' => $request->name,
+            'image' => UploadImage($request->file('image'), 'category', '/uploads/categories')
         ]);
         flash('تم اضافة القسم بنجاح')->success();
         return redirect()->route('main-categories.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $Category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $Category)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -81,10 +73,12 @@ class MainCategoriesController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
+            'image' => 'nullable|mimes:png,jpg,jpeg|max:3072',
         ]);
         $category = Category::findOrFail($id);
         $category->update([
             'name' => $request->name,
+            'image' => $request->file('image') == null ? $category->image : UploadImageEdit($request->file('image'), 'category', '/uploads/categories', $category->image)
         ]);
         flash('تم تعديل القسم بنجاح')->success();
         return redirect()->route('main-categories.index');
@@ -96,14 +90,19 @@ class MainCategoriesController extends Controller
      * @param  \App\Category  $Category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $Category)
+    public function destroy(Category $category)
     {
-        $check = $Category->products == null ? 0 : $Category->products;
+        $check = $category->products == null ? 0 : $category->products;
         if ($check->count() > 0) {
             flash('لا يمكن حذف القسم لان به منتجات')->error();
             return back();
         }
-        $Category->delete();
+        $image = $category->image;
+        
+        $category->delete();
+        if (file_exists(public_path('/uploads/categories/'.$image))) {
+            unlink(public_path('/uploads/categories/'.$image));
+        }
         flash('تم حذف القسم بنجاح')->warning();
         return back();
     }

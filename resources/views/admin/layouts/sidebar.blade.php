@@ -48,7 +48,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('/admin/users/providers') }}" class="nav-link disabled">
-                            <span class="title"> الاسر المنتجة</span>
+                            <span class="title"> المزودين</span>
                             <span class="badge badge-success">{!! count(\App\User::where('type','1')->get()) !!}</span>
                         </a>
                     </li>
@@ -77,7 +77,7 @@
             <li class="nav-item {{ strpos(URL::current(), 'admin/main-categories') !== false ? 'active' : '' }}">
                 <a href="{{ route('main-categories.index')}}" class="nav-link ">
                     <i class="fa fa-sitemap" style="color: aqua;"></i>
-                    <span class="title">التصنيفات</span>
+                    <span class="title">الاقسام</span>
                     <span class="pull-right-container"></span>
                     <span class="badge badge-success">{!! count(\App\Category::get()) !!}</span>
                 </a>

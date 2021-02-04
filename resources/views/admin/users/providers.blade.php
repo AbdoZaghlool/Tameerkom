@@ -20,17 +20,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="/admin/users/providers">الاسر المنتجة</a>
+            <a href="/admin/users/providers">المزودين</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض الاسر المنتجة</span>
+            <span>عرض المزودين</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title">عرض الاسر المنتجة
-    <small>عرض جميع الاسر المنتجة</small>
+<h1 class="page-title">عرض المزودين
+    <small>عرض جميع المزودين</small>
 </h1>
 @endsection
 @section('content')
@@ -44,7 +44,7 @@
             <div class="portlet-body">
                 <div class="table-toolbar">
                     <div class="row">
-                        
+
                         <div class="col-lg-6">
                             <div class="btn-group">
                                 <a class="btn sbold green" href="{{route('users.create',['type'=> 1])}}"> إضافة جديد
@@ -55,23 +55,16 @@
 
                     </div>
                 </div>
-                <table class="table table-striped table-bordered table-hover table-checkable order-column"
-                    id="sample_1">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
-                                    <span></span>
-                                </label>
-                            </th>
-                            <th></th>
+                            <th>رقم المستخدم</th>
                             <th> الاسم</th>
                             <th>رقم الهاتف</th>
                             <th>التفعيل</th>
                             <th>عدد المنتجات</th>
                             <th>عدد الطلبات</th>
-                            
+
                             <th>العمليات</th>
                         </tr>
                     </thead>
@@ -79,15 +72,9 @@
                         <?php $i=0 ?>
                         @foreach($users as $user)
                         <tr class="odd gradeX">
-                            <td>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes" value="1" />
-                                    <span></span>
-                                </label>
-                            </td>
                             <td>{{$user->id}}</td>
                             <td> {{$user->name}} </td>
-                            
+
                             <td>{{$user->phone_number}} </td>
 
                             @if($user->active == 0)
@@ -97,12 +84,11 @@
                             @endif
 
                             <td>{{$user->products->count()}} </td>
-                            <td>{{$user->familyOrders->count()}} </td>
+                            <td>{{$user->providerOrders->count()}} </td>
 
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs green dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-expanded="false"> العمليات
+                                    <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> العمليات
                                         <i class="fa fa-angle-down"></i>
                                     </button>
                                     <ul class="dropdown-menu pull-left" role="menu">
@@ -110,18 +96,17 @@
                                             <a href="{{route('users.edit',['id' => $user->id])}}">
                                                 <i class="icon-docs"></i> تعديل </a>
                                         </li>
-                                        
+
                                         <li>
-                                            <a class="delete_user" data="{{ $user->id }}"
-                                        data_name="{{ $user->name }}">
-                                        <i class="fa fa-key"></i> مسح
-                                        </a>
-                                        </li> 
+                                            <a class="delete_user" data="{{ $user->id }}" data_name="{{ $user->name }}">
+                                                <i class="fa fa-key"></i> مسح
+                                            </a>
+                                        </li>
 
                                     </ul>
                                 </div>
                             </td>
-                            
+
                         </tr>
                         @endforeach
                     </tbody>
@@ -143,39 +128,41 @@
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script>
-    function testActive(state, id){
+    function testActive(state, id) {
         $.ajax({
-            url: 'update/blocked/'+id,
-            type: 'GET',
-            datatype: 'json',
-            success: function (data) {
+            url: 'update/blocked/' + id
+            , type: 'GET'
+            , datatype: 'json'
+            , success: function(data) {
                 console.log(data);
             }
         });
 
     }
+
 </script>
 <script>
     $(document).ready(function() {
-            var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
-            $('body').on('click', '.delete_user', function() {
-                var id = $(this).attr('data');
-                var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
-                var swal_title = 'هل أنت متأكد من الحذف ؟';
-                swal({
-                    title: swal_title,
-                    text: swal_text,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "تأكيد",
-                    cancelButtonText: "إغلاق",
-                    closeOnConfirm: false
-                }, function() {
-                    window.location.href = "{{ url('/') }}" + "/admin/delete/"+id+"/user";
-                });
+        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
+        $('body').on('click', '.delete_user', function() {
+            var id = $(this).attr('data');
+            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
+            var swal_title = 'هل أنت متأكد من الحذف ؟';
+            swal({
+                title: swal_title
+                , text: swal_text
+                , type: "warning"
+                , showCancelButton: true
+                , confirmButtonClass: "btn-warning"
+                , confirmButtonText: "تأكيد"
+                , cancelButtonText: "إغلاق"
+                , closeOnConfirm: false
+            }, function() {
+                window.location.href = "{{ url('/') }}" + "/admin/delete/" + id + "/user";
             });
         });
+    });
+
 </script>
 
 @endsection

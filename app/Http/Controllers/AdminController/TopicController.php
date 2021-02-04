@@ -83,11 +83,11 @@ class TopicController extends Controller
     {
         $topic = Topic::findOrFail($id);
         if ($topic->families()->count() > 0) {
-            flash('لا يمكن حذف التصنيف لان به اسر منتجة')->error()->important();
+            flash('لا يمكن حذف القسم لان به اسر منتجة')->error()->important();
             return back();
         }
         $topic->delete();
-        flash('تم حذف التصنيف')->warning();
+        flash('تم حذف القسم')->warning();
         return back();
     }
 }

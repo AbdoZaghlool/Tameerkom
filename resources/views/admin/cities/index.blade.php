@@ -55,17 +55,10 @@
                     id="sample_1">
                     <thead>
                         <tr>
-                            <th>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
-                                    <span></span>
-                                </label>
-                            </th>
+                            <th>#</th>
                             <th>اسم المدينه</th>
                             <th>المنطقة التابعة لها</th>
                             <th>عدد المسجلين</th>
-                            {{--  <th>الدولة التابعة لها</th>  --}}
-
                             <th> العمليات </th>
                         </tr>
                     </thead>
@@ -73,12 +66,7 @@
 
                         @foreach( $records as $record )
                         <tr class="odd gradeX">
-                            <td>
-                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes" value="1" />
-                                    <span></span>
-                                </label>
-                            </td>
+                            <td>{{$loop->iteration}}</td>
                             <td class="no_dec">{{ $record->name }}</td>
                             <td class="no_dec">{{ $record->region->name }}</td>
                             <td class="no_dec">{{ $record->providers->count() }}</td>

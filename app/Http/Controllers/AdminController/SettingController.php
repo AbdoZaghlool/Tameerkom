@@ -30,25 +30,15 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'email'                       => 'required|email',
-            'phone'                       => 'required',
-            'distance'                    => 'required',
-            'accept_order_time'           => 'required',
-            'tax'                         => 'required|numeric|between:0,0.15',
-            'family_commission'           => 'required|numeric|between:0,0.2',
-            'driver_commission'           => 'required|numeric|between:0,0.15',
-            'delivery_time'               => 'required',
-            'scheduled_order_duration'    => 'required',
-            'min_value_withdrow_family'   => 'required|numeric|gt:0',
-            'min_value_withdrow_driver'   => 'required|numeric|gt:0',
-            'order_payment_time'          => 'required|numeric|gt:0',
-            'product_limit'               => 'required|numeric',
-            'logo'                        => 'nullable|mimes:png,jpg,jpeg,pmb|max:3072',
-            'face_url'                    => 'nullable',
-            'twiter_url'                  => 'nullable',
-            'snapchat_url'                => 'nullable',
-            'insta_url'                   => 'nullable',
-            'youtube_url'                 => 'nullable',
+            'email'        => 'required|email',
+            'phone'        => 'required',
+            'commission'   => 'required|numeric|between:0,0.2',
+            'logo'         => 'nullable|mimes:png,jpg,jpeg,pmb|max:3072',
+            'face_url'     => 'nullable',
+            'twiter_url'   => 'nullable',
+            'snapchat_url' => 'nullable',
+            'insta_url'    => 'nullable',
+            'youtube_url'  => 'nullable',
         ]);
         $record = Setting::find(1);
         $record->update($request->except('logo'));

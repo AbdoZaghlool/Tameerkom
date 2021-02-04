@@ -40,8 +40,7 @@ class HomeController extends Controller
     {
         $users = DB::table('users')->count();
         $admins = DB::table('admins')->count();
-        $ordersStats = $this->ordersStats();
-        return view('admin.home', compact('users', 'admins', 'ordersStats'));
+        return view('admin.home', compact('users', 'admins'));
     }
 
     /**
@@ -73,72 +72,6 @@ class HomeController extends Controller
                 })
                 ->get()->toArray();
             return $users;
-        }
-    }
-
-    /**
-     * get subscriptions view
-     *
-     * @return void
-     */
-    public function subscriptions()
-    {
-        $records = Subscription::with('service', 'family')->latest()->get();
-        return view('admin.subscriptions.index', compact('records'));
-    }
-
-    /**
-     * get verification requests view
-     *
-     * @return void
-     */
-    public function getPullRequests()
-    {
-        $records = Wallet::where('pull_request', 1)->latest()->get();
-        return view('admin.wallets.index', compact('records'));
-    }
-
-    /**
-     * update pull request to be accepted or not
-     *
-     * @param Request $request
-     * @param Wallet $id
-     * @return void
-     */
-    public function postPullRequests(Request $request, $id)
-    {
-        $wallet = Wallet::find($id);
-        if (!$wallet == null) {
-            $amount = $wallet->amount;
-            $wallet->update([
-                'cash' => $wallet->cash -= $wallet->amount ,
-                'pull_request' => 0,
-                'amount' => null,
-            ]);
-
-            History::create([
-                'user_id' => $wallet->user_id,
-                'title' => 'تم تحويل المبلغ المطلوب',
-                'price' => $amount,
-            ]);
-
-            // $devicesTokens = UserDevice::where('user_id', $wallet->user_id)
-            //     ->get()
-            //     ->pluck('device_token')
-            //     ->toArray();
-            // $title = 'سحب الرصيد';
-            // $body = 'تم تحويل المبلغ المطلوب سحبه الى حسابك البنكي';
-            // if ($devicesTokens) {
-            //     sendMultiNotification($title, $body, $devicesTokens, 11);
-            // }
-            // saveNotification($wallet->user_id, $title, $body, null, 4);
-
-
-            flash('تم تأكيد التحويل بنجاح');
-            return back();
-        } else {
-            flash('حدث خطأ برجاء المحاولة لاحقا')->error();
-            return back();
         }
     }
 
@@ -211,80 +144,5 @@ class HomeController extends Controller
         }
         flash('تم ارسال الاشعار للمستخدمين بنجاح');
         return back();
-    }
-
-    /**
-     * get wallet charge view
-     *
-     * @return void
-     */
-    public function getChargeWallet()
-    {
-        return view('admin.wallets.send-one');
-    }
-
-    /**
-     * send public notifications to group of users
-     * @param Request $request,
-     * @return void
-     */
-    public function postChargeWallet(Request $request)
-    {
-        $this->validate($request, [
-            'user_id' => 'required',
-            'amount'  => 'required|numeric|gt:0',
-        ]);
-
-        $user = User::findOrFail($request->user_id);
-        $user->wallet()->update([
-            'cash' => $user->wallet->cash + $request->amount
-        ]);
-
-        History::create([
-            'user_id' => $user->id,
-            'title'   => 'شحن رصيد من ادارة التطبيق',
-            'price'   => $request->amount
-        ]);
-
-        flash('تم شحن محفظة المستخدم بنجاح');
-        return back();
-    }
-    
-    
-    /**
-     * return view with order vats
-     *
-     * @return void
-     */
-    public function vat()
-    {
-        $orders = Order::where('status','3')->get();
-        return view('admin.vats.index',compact('orders'));
-    }
-
-    /**
-     * get orders status our application
-     */
-    public function ordersStats()
-    {
-        if (request()->ajax()) {
-            $fams = \App\User::whereHas('familyOrders')->withCount('familyOrders')->get();
-            $families = $fams->pluck('name')->toArray();
-            $count = $fams->pluck('family_orders_count')->toArray();
-            return ['families' => $families, 'count' => $count];
-        }
-        $ordersByMonth = Order::select([
-            DB::raw('count(id) as quantity'),
-            DB::raw('MONTHNAME(created_at) as month'),
-            // DB::raw('year(created_at) as year')
-        ])
-        ->groupBy('month')
-        ->get();
-
-        $months= $ordersByMonth->pluck('month');
-        $quantity= $ordersByMonth->pluck('quantity')->toArray();
-        // dd($months);
-
-        return $ordersByMonth;
     }
 }
