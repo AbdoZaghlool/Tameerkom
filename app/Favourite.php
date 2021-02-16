@@ -9,11 +9,12 @@ class Favourite extends Model
 {
     protected $guarded = [];
 
-    protected $table = 'favourites';
+    protected $table = 'favourable';
+
 
     public function users()
     {
-        return $this->morphedByMany(User::class, 'favourable');
+        return $this->morphedByMany(User::class, 'favourable', 'favourable');
     }
 
     public function products()

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FamilyResource;
+use App\Http\Resources\ProviderResource;
 use App\Http\Resources\Order as OrderResource;
 use App\Http\Resources\User as UserResource;
 use App\OrderOffer;
@@ -461,7 +461,7 @@ class PartnerController extends Controller
             return $slide->image = asset('uploads/family_sliders/'.$slide->image);
         });
         $data = [
-            'family'  => new FamilyResource($this->family),
+            'family'  => new ProviderResource($this->family),
             'sliders' => $sliders,
         ];
         return ApiController::respondWithSuccess(array($data));

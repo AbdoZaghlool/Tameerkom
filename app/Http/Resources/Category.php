@@ -17,6 +17,8 @@ class Category extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'min_quantity' => (int)$this->min_quantity,
+            'image' => (string)asset('uploads/categories/'.$this->image),
             'products' => Product::collection($this->whenLoaded('products')),
         ];
     }

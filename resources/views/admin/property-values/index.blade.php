@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-الاقسام
+قيمة الخاصية
 @endsection
 
 @section('styles')
@@ -11,7 +11,6 @@
 @endsection
 
 @section('page_header')
-{{-- bread crumb section  --}}
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
@@ -19,17 +18,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ url('admin/main-categories') }}">الاقسام</a>
+            <a href="{{ url('admin/property-values/'.$property->id) }}">قيمة الخاصية</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض الاقسام</span>
+            <span>عرض قيمة الخاصية</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title"> الاقسام
-    {{--<small>عرض جميع الاقسام</small>--}}
+<h1 class="page-title"> قيم خاصية {{$property->name}} في قسم {{$property->category->name}}
+    {{--<small>عرض جميع قيمة الخاصية</small>--}}
 </h1>
 @include('flash::message')
 @endsection
@@ -44,7 +43,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="btn-group">
-                                <a class="btn sbold green" href="{{ route('main-categories.create') }}"> إضافة جديد
+                                <a class="btn sbold green" href="{{ route('property-values.create',$property) }}"> إضافة جديد
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -56,40 +55,22 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> أسم القسم </th>
-                            <th>عدد المنتجات</th>
+
+                            <td>القيمة</td>
                             <th> العمليات </th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        @foreach( $records as $category )
+                        @foreach( $records as $record )
                         <tr class="odd gradeX">
                             <td>{{$loop->iteration}}</td>
-                            <td class="no_dec">{{ $category->name }}</td>
-                            <td class="no_dec">{{ $category->products->count() }}</td>
+                            <td class="no_dec">{{ $record->name }}</td>
 
                             <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> العمليات
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-left" role="menu">
-
-                                        <li>
-                                            <a href="{{ route('main-categories.edit',['id'=>$category->id]) }}">
-                                                <i class="icon-pencil"></i> تعديل
-                                            </a>
-                                        </li>
-                                        @if ($category->id > 3)
-                                        <li>
-                                            <a class="delete_data" data="{{ $category->id }}" data_name="{{ $category->name }}">
-                                                <i class="fa fa-times"></i> حذف
-                                            </a>
-                                        </li>
-                                        @endif
-                                    </ul>
-                                </div>
+                                <a class="btn btn-danger delete_data" data="{{ $record->id }}" data_name="{{ $record->name }}">
+                                    <i class="fa fa-times"></i> حذف
+                                </a>
                             </td>
                         </tr>
                         @endforeach
@@ -146,7 +127,7 @@
                 , cancelButtonText: "إغلاق"
             }, function() {
 
-                window.location.href = "{{ url('/') }}" + "/admin/main-categories/" + id + "/delete";
+                window.location.href = "{{ url('/') }}" + "/admin/property-values/" + id + "/delete";
 
             });
 

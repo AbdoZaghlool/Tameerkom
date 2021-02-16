@@ -37,9 +37,9 @@ class Product extends Model
         return $value == 0 ? 0.1 : (double)$value;
     }
 
-    public function additions()
+    public function values()
     {
-        return $this->hasMany(ProductAddition::class);
+        return $this->belongsToMany(PropertyValue::class, 'product_property_value');
     }
 
     public function provider()
@@ -64,7 +64,7 @@ class Product extends Model
 
     public function favourites()
     {
-        return $this->morphToMany(Favourite::class, 'favourable');
+        return $this->belongsToMany(User::class, 'favourites');
     }
 
     /**

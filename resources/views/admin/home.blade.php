@@ -258,7 +258,7 @@ float: right;
 @endsection
 
 @section('scripts')
-<script>
+{{-- <script>
     var ctx = document.getElementById('myChart');
     var myChart = new Chart(ctx, {
         type: 'pie'
@@ -358,7 +358,7 @@ float: right;
         }
     });
 
-</script>
+</script>  --}}
 
 {{-- <script>
 

@@ -123,13 +123,13 @@ class User extends Authenticatable //implements JWTSubject
         return $this->hasMany(Notification::class);
     }
 
-    public function favouritUsers()
-    {
-        return $this->morphToMany(Favourite::class, 'favourable');
-    }
-
     public function favouritProducts()
     {
-        return $this->morphToMany(Favourite::class, 'favourable');
+        return $this->belongsToMany(Product::class, 'favourites', 'user_id', 'product_id');
+    }
+
+    public function favouritUsers()
+    {
+        return $this->belongsToMany(User::class, 'favourite_users', 'user_id', 'provider_id');
     }
 }

@@ -25,6 +25,7 @@ class Product extends JsonResource
             'provider_id'      => (int)$this->provider_id,
             'provider_name'    => (string)$this->provider->name,
             'created_at'       => $this->created_at->format('Y-m-d H:i'),
+            'property_values'  => Value::collection($this->values),
             'images'           => Picture::collection($this->pictures)
         ];
     }

@@ -6,7 +6,7 @@ use App\Category;
 use App\City;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Category as CategoryResource;
-use App\Http\Resources\FamilyResource;
+use App\Http\Resources\Provider as ProviderResource;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Product as ProductResource;
 use App\Product;
@@ -21,14 +21,14 @@ class MainController extends Controller
     /**
      * get provider by id
      *
-     * @param [type] $id
+     * @param int $id
      * @return void
      */
     public function userById($id)
     {
         $user = User::find($id);
         if ($user) {
-            return ApiController::respondWithSuccess(new UserResource($user));
+            return ApiController::respondWithSuccess(new ProviderResource($user));
         }
         return ApiController::respondWithServerErrorArray();
     }
@@ -102,8 +102,9 @@ class MainController extends Controller
         $arr = [];
         foreach ($data as $value) {
             array_push($arr, [
-                'id' => $value->id,
-                'name' => $value->name,
+                'id'          => $value->id,
+                'name'        => $value->name,
+                'region_id'   => (int)$region_id,
                 'region_name' => $value->region->name,
             ]);
         }
@@ -137,8 +138,7 @@ class MainController extends Controller
      */
     public function mainCat($id = null)
     {
-        $categories = Category::with('products')->filter($id)->latest()->get();
-
+        $categories = Category::with('products', 'products.values', 'products.values.property')->filter($id)->get();
         if ($categories->count() == 0) {
             $err = [
                 'key' => 'categories',
@@ -180,7 +180,7 @@ class MainController extends Controller
                 ->get();
             if ($data->count() > 0) {
                 $request['search_type'] = 'family';
-                return ApiController::respondWithSuccess(FamilyResource::collection($data));
+                return ApiController::respondWithSuccess(ProviderResource::collection($data));
             }
         } else {
             // search in families
@@ -189,7 +189,7 @@ class MainController extends Controller
                 ->get();
             if ($data->count() > 0) {
                 $request['search_type'] = 'family';
-                return ApiController::respondWithSuccess(FamilyResource::collection($data));
+                return ApiController::respondWithSuccess(ProviderResource::collection($data));
             }
             // end search in families
 
@@ -200,7 +200,7 @@ class MainController extends Controller
             if ($data->count() > 0) {
                 $request['search_type'] = 'product';
                 $families = $data->unique('provider_id')->pluck('provider');
-                return ApiController::respondWithSuccess(FamilyResource::collection($families));
+                return ApiController::respondWithSuccess(ProviderResource::collection($families));
             }
             // end search in products
         }

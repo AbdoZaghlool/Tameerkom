@@ -13,10 +13,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::get('/get-filterd-users/{id?}', 'AdminController\HomeController@filterdUsers') ;
-
-Route::get('/get-orders-status', 'AdminController\HomeController@ordersStats') ;
-
 Route::get('/get_sub_cat/{model}/{col}/{id}', function ($model, $col, $id) {
     // model_name ,foriegn_key,id
     $new = 'App\\' . $model;
@@ -67,6 +63,16 @@ Route::prefix('admin')->group(function () {
         // ================================cities=============================================
         Route::get('/cities/{id}/delete', 'CityController@destroy');
         Route::resource('cities', 'CityController');
+
+        // ================================properties=============================================
+        Route::get('/properties/{id}/delete', 'PropertyController@destroy');
+        Route::resource('properties', 'PropertyController');
+
+        // ================================property-values=============================================
+        Route::get('/property-values/{property}', 'ValueController@index')->name('property-values.index');
+        Route::get('/property-values/{property}/create', 'ValueController@create')->name('property-values.create');
+        Route::post('/property-values/{property}/store', 'ValueController@store')->name('property-values.store');
+        Route::get('/property-values/{id}/delete', 'ValueController@destroy')->name('property-values.delete');
 
 
         // ================================ notifications =============================================

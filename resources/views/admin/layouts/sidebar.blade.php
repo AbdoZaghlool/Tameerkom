@@ -83,9 +83,18 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ strpos(URL::current(), 'admin/properties') !== false ? 'active' : '' }}">
+                <a href="{{ route('properties.index')}}" class="nav-link ">
+                    <i class="fa fa-sitemap" style="color: aqua;"></i>
+                    <span class="title">الخصائص</span>
+                    <span class="pull-right-container"></span>
+                    <span class="badge badge-success">{!! count(\App\Property::get()) !!}</span>
+                </a>
+            </li>
+
             <li class="nav-item {{ strpos(URL::current(), 'admin/orders') !== false ? 'active' : '' }}">
                 <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="fa fa-shopping-cart" style="color: aqua;"></i>
+                    <i class="icon-settings" style="color: aqua;"></i>
                     <span class="title">الطلبات</span>
                     <span class="arrow"></span>
                 </a>

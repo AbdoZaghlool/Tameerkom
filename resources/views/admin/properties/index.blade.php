@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-الاقسام
+الخصائص
 @endsection
 
 @section('styles')
@@ -11,7 +11,6 @@
 @endsection
 
 @section('page_header')
-{{-- bread crumb section  --}}
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
@@ -19,17 +18,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ url('admin/main-categories') }}">الاقسام</a>
+            <a href="{{ url('admin/properties') }}">الخصائص</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض الاقسام</span>
+            <span>عرض الخصائص</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title"> الاقسام
-    {{--<small>عرض جميع الاقسام</small>--}}
+<h1 class="page-title"> الخصائص
+    {{--<small>عرض جميع الخصائص</small>--}}
 </h1>
 @include('flash::message')
 @endsection
@@ -40,56 +39,31 @@
         <!-- BEGIN EXAMPLE TABLE PORTLET-->
         <div class="portlet light bordered">
             <div class="portlet-body">
-                <div class="table-toolbar">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="btn-group">
-                                <a class="btn sbold green" href="{{ route('main-categories.create') }}"> إضافة جديد
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
                 <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th> أسم القسم </th>
-                            <th>عدد المنتجات</th>
+                            <th>القسم التابع له</th>
+                            <th>اسم الخاصية</th>
+                            <th>عدد القيم</th>
                             <th> العمليات </th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        @foreach( $records as $category )
+                        @foreach( $records as $record )
                         <tr class="odd gradeX">
                             <td>{{$loop->iteration}}</td>
-                            <td class="no_dec">{{ $category->name }}</td>
-                            <td class="no_dec">{{ $category->products->count() }}</td>
-
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> العمليات
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-left" role="menu">
-
-                                        <li>
-                                            <a href="{{ route('main-categories.edit',['id'=>$category->id]) }}">
-                                                <i class="icon-pencil"></i> تعديل
-                                            </a>
-                                        </li>
-                                        @if ($category->id > 3)
-                                        <li>
-                                            <a class="delete_data" data="{{ $category->id }}" data_name="{{ $category->name }}">
-                                                <i class="fa fa-times"></i> حذف
-                                            </a>
-                                        </li>
-                                        @endif
-                                    </ul>
-                                </div>
+                            <td class="no_dec">
+                                {{ $record->category->name }}
+                            </td>
+                            <td class="no_dec">{{ $record->name }}</td>
+                            <td class="no_dec">{{ $record->values->count() }}</td>
+                            <td class="no_dec">
+                                <a class="btn btn-success" href="{{route('property-values.index',$record)}}">
+                                    عرض
+                                </a>
                             </td>
                         </tr>
                         @endforeach
@@ -146,7 +120,7 @@
                 , cancelButtonText: "إغلاق"
             }, function() {
 
-                window.location.href = "{{ url('/') }}" + "/admin/main-categories/" + id + "/delete";
+                window.location.href = "{{ url('/') }}" + "/admin/properties/" + id + "/delete";
 
             });
 

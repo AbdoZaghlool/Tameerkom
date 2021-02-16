@@ -23,7 +23,7 @@ class AuthUserController extends Controller
     {
         $rules = [
             'phone_number' => 'required|unique:users|starts_with:05|digits:10',
-            'app_signature' => 'required',
+            'app_signature' => 'sometimes',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -179,8 +179,7 @@ class AuthUserController extends Controller
         }
 
         if ($check = Auth::attempt(['phone_number' => $request->phone_number, 'password' => $request->password])) {
-            $user = User::where('phone_number', $request->phone_number)->where('type', $request->type)->first();
-
+            $user = $request->user();
             $token = generateApiToken($user->id, 15);
             $user->update([
                 'api_token' => $token,
@@ -226,41 +225,29 @@ class AuthUserController extends Controller
     public function forgetPassword(Request $request)
     {
         $rules = [
-            'phone_number'  => 'required|numeric',
-            'app_signature' => 'required',
+            'phone_number'  => 'required|numeric|exists:users,phone_number',
+            'app_signature' => 'sometimes',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
+
         $user = App\User::where('phone_number', $request->phone_number)->first();
 
-        if ($user) {
-            $code = mt_rand(1000, 9999);
-            $this->sendSMS($request, $code);
-            
-            $updated = $user->update([
+        $code = mt_rand(1000, 9999);
+        $this->sendSMS($request, $code);
+        
+        $updated = $user->update([
                 'verification_code' => $code,
-            ]);
-            $success = [
-                'key' => 'message',
-                'value' => "تم ارسال الكود بنجاح",
-            ];
-            return $updated
+        ]);
+        $success = [
+            'key' => 'message',
+            'value' => "تم ارسال الكود بنجاح",
+        ];
+        return $updated
             ? ApiController::respondWithSuccess($success)
             : ApiController::respondWithServerErrorObject();
-        } else {
-            $errors = [
-                'key' => 'message',
-                'value' => 'رقم الهاتف  غير صحيح',
-            ];
-            return ApiController::respondWithErrorArray($errors);
-        }
-        $errorsLogin = [
-            'key' => 'message',
-            'value' => trans('messages.Wrong_phone'),
-        ];
-        return ApiController::respondWithErrorClient(array($errorsLogin));
     }
 
     /**
@@ -272,7 +259,7 @@ class AuthUserController extends Controller
     public function confirmResetCode(Request $request)
     {
         $rules = [
-            'phone_number' => 'required',
+            'phone_number' => 'required|exists:users,phone_number',
             'code' => 'required',
         ];
         $validator = Validator::make($request->all(), $rules);
@@ -309,8 +296,8 @@ class AuthUserController extends Controller
     public function resetPassword(Request $request)
     {
         $rules = [
-            'phone_number' => 'required|numeric',
-            'password'     => 'required|min:6',
+            'phone_number'          => 'required|numeric',
+            'password'              => 'required|min:6',
             'password_confirmation' => 'required|same:password',
         ];
         $validator = Validator::make($request->all(), $rules);
@@ -474,24 +461,19 @@ class AuthUserController extends Controller
         if ($validator->fails()) {
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
-        $user = App\User::where('id', $request->user()->id)->first();
+        $user = $request->user();
         $oldImage = $user->image;
         $updated = $user->update([
-            'image' => $request->image == null ? $user->image : UploadImageEdit($request->file('image'), 'user', '/uploads/users', $oldImage),
-            'name' => $request->name == null ? $user->name : $request->name,
-            'email' => $request->email == null ? $user->email : $request->email,
-            'latitude' => $request->latitude == null ? $user->latitude : $request->latitude,
-            'longitude' => $request->longitude == null ? $user->longitude : $request->longitude,
+            'name'              => $request->name ?? $user->name ,
+            'commercial_record' => $request->commercial_record ?? $user->commercial_record,
+            'email'             => $request->email ?? $user->email,
+            'latitude'          => $request->latitude ?? $user->latitude,
+            'longitude'         => $request->longitude ?? $user->longitude,
+            'image'             => $request->image == null ? $user->image : UploadImageEdit($request->file('image'), 'user', '/uploads/users', $oldImage),
         ]);
-        // dd($updated);
+
         return $updated
-        ? ApiController::respondWithSuccess([
-            'image' => asset('/uploads/users/' . $user->image),
-            'name' => $user->name,
-            'email' => $user->email == null ? 'null' : $user->email,
-            'latitude' => $user->latitude,
-            'longitude' => $user->longitude,
-        ])
+        ? ApiController::respondWithSuccess(new UserResource($user))
         : ApiController::respondWithServerErrorObject();
     }
 
