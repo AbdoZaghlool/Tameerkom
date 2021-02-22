@@ -116,7 +116,7 @@ class ProductController extends Controller
             'price'                => 'sometimes|numeric',
             'category_id'          => 'sometimes|exists:categories,id',
             'property_value_id'    => 'sometimes|array',
-            'image'                => 'sometimes',
+            'image'                => 'sometimes|required|array',
             'image.*'              => 'mimes:jpeg,bmp,png,jpg|max:2048',
         ];
         $validation = Validator::make($request->all(), $rules);
@@ -135,10 +135,10 @@ class ProductController extends Controller
 
         // update product to storage
         $product->update([
-            'name'             => $request->name == null ? $product->name : $request->name,
-            'details'          => $request->details  == null ? $product->details : $request->details,
-            'price'            => $request->price  == null ? $product->price : $request->price,
-            'category_id'      => $request->category_id  == null ? $product->category_id : $request->category_id,
+            'name'        => $request->name ?? $product->name,
+            'details'     => $request->details ?? $product->details,
+            'price'       => $request->price ?? $product->price,
+            'category_id' => $request->category_id ?? $product->category_id,
         ]);
 
         // save new product images to storage

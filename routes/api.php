@@ -87,7 +87,12 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
 
         /*user orders*/
-        Route::get('/my-orders', [UserController::class, 'myCurrentOrders']);
+        Route::get('/my-orders', [UserController::class, 'myOrders']);
+        Route::post('/rate-product', [UserController::class,'rateProduct']);
+        Route::post('/rate', [OrderController::class,'rates']);
+
+        /*provider orders*/
+        Route::get('/provider-orders', [PartnerController::class, 'myOrders']);
         Route::post('/rate-product', [UserController::class,'rateProduct']);
         Route::post('/rate', [OrderController::class,'rates']);
 

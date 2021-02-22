@@ -81,7 +81,7 @@ class UserController extends Controller
     public function myOrders()
     {
         $user = request()->user();
-        $orders = $user->userOrders()->latest()->get();
+        $orders = $user->userOrders()->where('status', '!=', '4')->latest()->get();
         if ($orders->count() == 0) {
             $err = [
                 'key' => 'orders',

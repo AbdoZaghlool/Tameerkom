@@ -30,15 +30,19 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'email'        => 'required|email',
-            'phone'        => 'required',
-            'commission'   => 'required|numeric|between:0,0.2',
-            'logo'         => 'nullable|mimes:png,jpg,jpeg,pmb|max:3072',
-            'face_url'     => 'nullable',
-            'twiter_url'   => 'nullable',
-            'snapchat_url' => 'nullable',
-            'insta_url'    => 'nullable',
-            'youtube_url'  => 'nullable',
+            'email'               => 'required|email',
+            'phone'               => 'required',
+            'bank_name'           => 'required',
+            'bank_number'         => 'required',
+            'commission'          => 'required|numeric|between:0,0.2',
+            'active_orders_count' => 'required|numeric|between:0,99',
+            'unpaid_commissions'  => 'required|numeric|between:0,99',
+            'logo'                => 'nullable|mimes:png,jpg,jpeg,pmb|max:3072',
+            'face_url'            => 'nullable',
+            'twiter_url'          => 'nullable',
+            'snapchat_url'        => 'nullable',
+            'insta_url'           => 'nullable',
+            'youtube_url'         => 'nullable',
         ]);
         $record = Setting::find(1);
         $record->update($request->except('logo'));
