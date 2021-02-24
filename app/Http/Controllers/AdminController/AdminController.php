@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminController;
 
 use App\Admin;
 use App\Http\Controllers\Controller;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -44,11 +45,22 @@ class AdminController extends Controller
             'name' => 'required',
             'email' => 'required|string|email|max:255|unique:admins',
             'password' => 'required|string|min:6|confirmed',
-            'phone' => 'required',
+            'image' => 'nullable|mimes:jpeg,png,jpg|max:3000',
+            'phone' => 'nullable',
+            'role_id' => 'required',
             ]);
         $request['remember_token'] = Str::random(60);
         $request['password'] = Hash::make($request->password);
-        Admin::create($request->all());
+        $admin = Admin::create($request->all());
+        if ($request->image != null) {
+            $admin->update([
+                'image' => UploadImage($request->image, 'admin', 'uploads/admins')
+            ]);
+        }
+        $role = Role::find($request->role_id);
+        $admin->attachRole($role);
+        $admin->attachPermissions($role->permissions()->pluck('id'));
+        
         return redirect(url('/admin/admins'))->with('msg', 'تم الاضافه بنجاح');
     }
 
@@ -78,10 +90,24 @@ class AdminController extends Controller
             'name' => 'required',
             'email' => 'required|string|email|max:255|unique:admins,email,' . $id,
             'phone' => 'required',
+            'image' => 'nullable|mimes:jpeg,png,jpg|max:3000',
+            'role_id' => 'required',
         ]);
         $request['remember_token'] = Str::random(60);
-        Admin::where('id', $id)->first()->update($request->all());
-        return redirect(url('/admin/admins'))->with('msg', 'تم التعديل بنجاح');
+        $admin = Admin::find($id);
+        // if ($request->role_id != $admin->roles()->first()->id) {
+        $role = Role::find($request->role_id);
+        $admin->roles()->sync($role->id);
+        $admin->permissions()->sync($role->permissions()->pluck('id'));
+        // }
+        $admin->update($request->only('name', 'email', 'phone'));
+        if ($request->image != null) {
+            $admin->update([
+                'image' => UploadImage($request->image, 'admin', 'uploads/admins')
+            ]);
+        }
+        flash('تم التعديل بنجاح');
+        return redirect(url('/admin/admins'));
     }
 
     /**

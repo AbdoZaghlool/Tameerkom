@@ -44,7 +44,7 @@ class RoleController extends Controller
             'name'            => 'required',
             'permission_list' => 'required|array',
         ];
-        $validator = $this->validate($request, $rules);
+        $this->validate($request, $rules);
         $record = Role::create($request->only('name', 'display_name'));
         $record->permissions()->attach($request['permission_list']);
         flash('تم اضافة الرتبة بنجاح');

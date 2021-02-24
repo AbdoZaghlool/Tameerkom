@@ -40,8 +40,11 @@ Route::prefix('admin')->group(function () {
     Route::post('logout', 'AdminController\Admin\LoginController@logout')->name('admin.logout');
 
 
-    Route::group(['middleware' => ['web', 'auth:admin'], 'namespace' => 'AdminController'], function () {
+    Route::group(['middleware' => ['web', 'auth:admin', 'check-permissions'], 'namespace' => 'AdminController'], function () {
 
+        // ================================roles====================================
+        Route::get('/roles/{id}/delete', 'RoleController@destroy')->name('roles.destroy');
+        Route::resource('roles', 'RoleController');
         // ================================application-settings====================================
         Route::get('setting', 'SettingController@index');
         Route::post('add/settings', 'SettingController@store');

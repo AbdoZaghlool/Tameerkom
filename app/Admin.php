@@ -3,13 +3,13 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\AdminResetPasswordNotification;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class Admin extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, LaratrustUserTrait;
     protected $guard = 'admin';
 
     /**
@@ -36,13 +36,11 @@ class Admin extends Authenticatable
     }
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'admin_role')->withTimestamps();
+        return $this->belongsToMany(Role::class, 'admin_role');
     }
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'admin_permission')->withTimestamps();
+        return $this->belongsToMany(Permission::class, 'admin_permission');
     }
-
-
 }

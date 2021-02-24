@@ -33,6 +33,14 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ strpos(URL::current(), 'admin/roles') !== false ? 'active' : '' }}">
+                <a href="{{ route('roles.index')}}" class="nav-link ">
+                    <i class="icon-layers"></i>
+                    <span class="title"> صلاحيات المديرين</span>
+                    <span class="pull-right-container"></span>
+                </a>
+            </li>
+
             <li class="nav-item {{ strpos(URL::current(), '/user') !== false ? 'active' : '' }}">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-users" style="color: aqua;"></i>
