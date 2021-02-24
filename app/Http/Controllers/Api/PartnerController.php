@@ -96,6 +96,29 @@ class PartnerController extends Controller
         return ApiController::respondWithSuccess(OrderResource::collection($orders));
     }
 
+    /**
+     * upload commission payment image
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function uploadImage(Request $request)
+    {
+        $rules = [
+            'order_id' => 'required|numeric|exists:orders,id',
+            'payment_image' => 'required|mimes:jpg,jpeg,png|max:5000',
+        ];
+        $validation = Validator::make($request->all(), $rules);
+        if ($validation->fails()) {
+            return ApiController::respondWithErrorObject(validateRules($validation->errors(), $rules));
+        }
+        $order = Order::find($request->order_id);
+        
+        $order->update([
+            'payment_image' => UploadImage($request->file('payment_image'), 'payments', '/uploads/payment_images')
+        ]);
+        return ApiController::respondWithSuccess('تم رفع الصورة بنجاح الي الادارة');
+    }
 
     /**
      * family get comments and rates.

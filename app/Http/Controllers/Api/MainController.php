@@ -136,9 +136,10 @@ class MainController extends Controller
      * @param int $id
      * @return json resopnes with categories
      */
-    public function mainCat($id = null)
+    public function mainCat(Request $request, $user_id = null)
     {
-        $categories = Category::with('products', 'products.values', 'products.values.property')->filter($id)->get();
+        $categories = Category::with('products', 'products.values', 'products.values.property')->get();
+        
         if ($categories->count() == 0) {
             $err = [
                 'key' => 'categories',
@@ -147,15 +148,13 @@ class MainController extends Controller
             return ApiController::respondWithErrorObject(array($err));
         }
 
+        $request['user_id'] = $user_id;
         return ApiController::respondWithSuccess(CategoryResource::collection($categories));
     }
 
-
-
-
     /**
      * search storage with user keyword
-     * first search in families to find any matching family by name,
+     * first search in provider to find any matching provider by name,
      * if not we search in products names and details
      * if not then there is no data match
      *
@@ -172,44 +171,36 @@ class MainController extends Controller
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
 
-        // search in families ids
-        if (is_numeric($request->keyword)) {
-            // dd($request->keyword);
-            $data = User::where('type', '1')->where('active', 1)->where('available', 1)
-                ->where('id', $request->keyword)
-                ->get();
-            if ($data->count() > 0) {
-                $request['search_type'] = 'family';
-                return ApiController::respondWithSuccess(ProviderResource::collection($data));
-            }
-        } else {
-            // search in families
-            $data = User::where('type', '1')->where('active', 1)->where('available', 1)
-                ->where('name', 'like', '%' . $request->keyword . '%')
-                ->get();
-            if ($data->count() > 0) {
-                $request['search_type'] = 'family';
-                return ApiController::respondWithSuccess(ProviderResource::collection($data));
-            }
-            // end search in families
+        // search in providers
+        $data = Product::with('provider')->whereHas('provider', function ($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->keyword . '%');
+        })->get();
 
-            // search in products
-            $data = Product::with('provider')->where('name', 'like', '%' . $request->keyword . '%')
-                ->orWhere('details', 'like', '%' . $request->keyword . '%')
-                ->get();
-            if ($data->count() > 0) {
-                $request['search_type'] = 'product';
-                $families = $data->unique('provider_id')->pluck('provider');
-                return ApiController::respondWithSuccess(ProviderResource::collection($families));
-            }
-            // end search in products
+        $data = $data->filter(function ($product) {
+            return $product['provider']['blocked'] == 0;
+        });
+        if ($data->count() > 0) {
+            return ApiController::respondWithSuccess(ProductResource::collection($data));
         }
+        // end search in providers
+
+        // search in products
+        $data = Product::with('provider')->where('name', 'like', '%' . $request->keyword . '%')
+            ->orWhere('details', 'like', '%' . $request->keyword . '%')
+            ->get();
+        $data = $data->filter(function ($product) {
+            return $product['provider']['blocked'] == 0;
+        });
+        if ($data->count() > 0) {
+            return ApiController::respondWithSuccess(ProductResource::collection($data));
+        }
+        // end search in products
 
         // no matching data in database
         $err = [
-            'key' => 'search_result',
-            'value' => 'لا يوجد بيانات تماثل ' . $request->keyword,
-        ];
+                'key' => 'search_result',
+                'value' => 'لا يوجد بيانات تماثل ' . $request->keyword,
+            ];
         return ApiController::respondWithErrorArray($err);
     }
 }

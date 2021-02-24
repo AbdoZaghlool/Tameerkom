@@ -27,7 +27,7 @@ class User extends Authenticatable //implements JWTSubject
         'longitude',
         'password',
         'active',
-        'available',
+        'blocked',
         'verified',
         'api_token',
         'verification_code',

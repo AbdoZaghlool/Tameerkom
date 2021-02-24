@@ -25,6 +25,6 @@ class AutoCheckPermission
             abort(403);
         }
         // dd($route_name);
-        abort(404);
+        abort(403);
     }
 }

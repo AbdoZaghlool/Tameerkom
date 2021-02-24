@@ -102,16 +102,43 @@
                     <li class="nav-item">
                         <a href="{{ route('orders.index') }}" class="nav-link ">
                             <span class="title">الطلبات</span>
-                            <span class="badge badge-success">{!! count(\App\Order::where('status','!=','4')->get()) !!}</span>
+                            <span class="badge badge-success">{!! count(\App\Order::whereIn('status',['0','1'])->get()) !!}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('orders.cancel-requests') }}" class="nav-link disabled">
+                            <span class="title"> طلبات الالغاء</span>
+                            <span class="badge badge-success">{!! count(\App\Order::where('status','3')->get()) !!}</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('orders.canceled') }}" class="nav-link disabled">
                             <span class="title"> الطلبات الملغية</span>
-                            <span class="badge badge-success">{!! count(\App\Order::where('status','4')->get()) !!}</span>
+                            <span class="badge badge-success">{!! count(\App\Order::where('status','2')->get()) !!}</span>
                         </a>
                     </li>
+                </ul>
+            </li>
 
+            <li class="nav-item {{ strpos(URL::current(), 'admin/commissions') !== false ? 'active' : '' }}">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="icon-settings" style="color: aqua;"></i>
+                    <span class="title">العمولات</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="{{ route('commissions.index') }}" class="nav-link ">
+                            <span class="title">العمولات المستحقة</span>
+                            <span class="badge badge-success">{!! count(\App\Order::where('status','1')->where('payment_status',0)->get()) !!}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('commissions.paid') }}" class="nav-link disabled">
+                            <span class="title"> العمولات المدفوعة</span>
+                            <span class="badge badge-success">{!! count(\App\Order::where('status','1')->where('payment_status',1)->get()) !!}</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

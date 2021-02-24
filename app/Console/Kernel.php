@@ -2,8 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\CheckDurations;
-use App\Console\Commands\TestCron;
+use App\Console\Commands\CheckBlocked;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        CheckDurations::class,
+        CheckBlocked::class,
     ];
 
     /**
@@ -29,9 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        // $schedule->command('check:commission')
-        //    ->cron('* * * * * *');
-        $schedule->command('command:check-durations')
+        $schedule->command('command:check-block-state')
             ->withoutOverlapping()
             ->everyMinute();
     }

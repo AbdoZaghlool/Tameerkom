@@ -1,12 +1,13 @@
 @extends('admin.layouts.master')
 
 @section('title')
-الشكاوى
+المدفوعات
 @endsection
 
 @section('styles')
 <link rel="stylesheet" href="{{ URL::asset('admin/css/datatables.min.css') }}">
 <link rel="stylesheet" href="{{ URL::asset('admin/css/datatables.bootstrap-rtl.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('admin/css/sweetalert.css') }}">
 <link rel="stylesheet" href="{{ URL::asset('admin/css/sweetalert.css') }}">
 @endsection
 
@@ -14,63 +15,64 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="{{ url('admin/home') }}">لوحة التحكم</a>
+            <a href="/admin/home">لوحة التحكم</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ url('admin/complaints') }}">الشكاوى</a>
+            <a href="/admin/commissions">المدفوعات</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض الشكاوى</span>
+            <span>عرض المدفوعات</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title"> الشكاوى
-    {{--<small>عرض جميع الشكاوى</small>--}}
+<h1 class="page-title">عرض المدفوعات
+    <small>عرض جميع المدفوعات</small>
 </h1>
-@include('flash::message')
 @endsection
-@section('content')
 
+@section('content')
+@include('flash::message')
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-md-12">
         <!-- BEGIN EXAMPLE TABLE PORTLET-->
         <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase"> المدفوعات</span>
+                </div>
+
+            </div>
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-hover order-column" id="sample_1">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>رقم الطلب</th>
-                            <th>مرسل الشكوى</th>
                             <th>المزود</th>
-                            <th>تفاصيل الشكوى</th>
-
-                            <th> العمليات </th>
+                            <th> العميل </th>
+                            <th>تاريخ الطلب</th>
+                            <th> السعر </th>
+                            <th> العمولة</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                        @foreach( $complaints as $record )
+                        @foreach($records as $order)
+                        @if ($order->payment_status === 1)
                         <tr class="odd gradeX">
-                            <td class="no_dec">{{$loop->iteration}}</td>
-                            <td class="no_dec">{{ $record->order_id }}</td>
-                            <td class="no_dec">
-                                <a href="{{route('users.edit',['id' => $record->user_id])}}">{{ $record->user->name }}</a>
-                            </td>
-                            <td class="no_dec">
-                                <a href="{{route('users.edit',['id' => $record->order->provider_id])}}">{{ $record->order->provider->name }}</a>
-                            </td>
-                            <td class="no_dec">{{ $record->content }}</td>
-                            <td>
-                                <a class="delete_data btn btn-danger" data="{{ $record->id }}" data_name="{{ $record->name }}">
-                                    <i class="fa fa-times"></i> حذف
-                                </a>
-                            </td>
+                            <td> {{$order->id}}</td>
+                            <td> {{$order->provider->name}}</td>
+                            <td> {{$order->user->name}}</td>
+                            <td> {{$order->created_at->format('Y-m-d')}}</td>
+                            <td> {{convertArabicNumbersToEnglish($order->price)}} (ريال) </td>
+                            <td> {{ convertArabicNumbersToEnglish($order->tax)}} (ريال) </td>
                         </tr>
+                        @endif
+
                         @endforeach
                     </tbody>
                 </table>
@@ -81,23 +83,6 @@
 </div>
 
 @endsection
-@section('content')
-@if (session('information'))
-<div class="alert alert-success">
-    {{ session('information') }}
-</div>
-@endif
-@if (session('pass'))
-<div class="alert alert-success">
-    {{ session('pass') }}
-</div>
-@endif
-@if (session('privacy'))
-<div class="alert alert-success">
-    {{ session('privacy') }}
-</div>
-@endif
-@endsection
 
 @section('scripts')
 <script src="{{ URL::asset('admin/js/datatable.js') }}"></script>
@@ -106,15 +91,13 @@
 <script src="{{ URL::asset('admin/js/table-datatables-managed.min.js') }}"></script>
 <script src="{{ URL::asset('admin/js/sweetalert.min.js') }}"></script>
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
-
 <script>
     $(document).ready(function() {
-        $('body').on('click', '.delete_data', function() {
+        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
+        $('body').on('click', '.delete_attribute', function() {
             var id = $(this).attr('data');
-            // console.log(id);
-            var swal_text = 'حذف ' + $(this).attr('data_name');
+            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
             var swal_title = 'هل أنت متأكد من الحذف ؟';
-
             swal({
                 title: swal_title
                 , text: swal_text
@@ -123,14 +106,13 @@
                 , confirmButtonClass: "btn-warning"
                 , confirmButtonText: "تأكيد"
                 , cancelButtonText: "إغلاق"
+                , closeOnConfirm: false
             }, function() {
-
-                window.location.href = "{{ url('/') }}" + "/admin/complaints/" + id + "/delete";
-
+                window.location.href = "{{ url('/') }}" + "/admin/orders/" + id + "/delete";
             });
-
         });
     });
 
 </script>
+
 @endsection

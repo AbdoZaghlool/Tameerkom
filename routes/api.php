@@ -54,7 +54,6 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
         Route::post('/user-change-phone-number', [AuthUserController::class, 'change_phone_number'])->name('user_change_phone_number');
         Route::post('/user-check-code-change-phone-number', [AuthUserController::class, 'check_code_changeNumber'])->name('user_check_code_changeNumber');
         Route::post('/user-change-info', [AuthUserController::class, 'changeInfo'])->name('user_change_info');
-        Route::post('/change-image', [UserController::class, 'change_image'])->name('change_image');
         Route::get('/my-rate', [ProfileController::class, 'myRate'])->name('getRate');
 
         //===============logout========================
@@ -93,11 +92,8 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
         /*provider orders*/
         Route::get('/provider-orders', [PartnerController::class, 'myOrders']);
-        Route::post('/rate-product', [UserController::class,'rateProduct']);
-        Route::post('/rate', [OrderController::class,'rates']);
+        Route::post('upload-payment-image', [PartnerController::class, 'uploadImage']);
 
-        
-        
         /** family comments and rates */
         Route::get('comments-rates', [PartnerController::class,'usersComments']);
 
@@ -108,6 +104,5 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
         Route::post('update-product/{product}', [ProductController::class, 'update']);
         Route::post('delete-product/{product}', [ProductController::class, 'destroy']);
         Route::post('delete-prodcut-image-by-id/{image_id}', [ProductController::class, 'deleteImageById']);
-        Route::post('delete-prodcut-addition-by-id/{add_id}', [ProductController::class, 'deleteAdditionById']);
     });
 });

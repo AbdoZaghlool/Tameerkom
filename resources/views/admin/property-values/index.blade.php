@@ -49,6 +49,12 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-4">
+                            <div class="caption font-weight-light float-left" style="float: left; color:red;">
+                                <i class="icon-arrow-up font-dark"></i>
+                                <span class="caption-subject bold uppercase"><a href="{{ url()->previous() }}">العودة للخلف</a></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">

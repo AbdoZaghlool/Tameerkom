@@ -58,14 +58,13 @@
                                 </label>
                             </th>
                             <th> رقم الطلب</th>
-                            <th> المزودينة</th>
+                            <th> المزود </th>
                             <th> العميل </th>
-                            <th> السائق </th>
-                            <th> نوع الطلب </th>
-                            <th> وقت التسليم </th>
+                            <th> المنتج </th>
+                            <th> وقت الطلب </th>
                             <th> حالة الطلب </th>
                             <th> السعر(ريال) </th>
-                            <th>عرض التفاصيل</th>
+                            {{-- <th>عرض التفاصيل</th> --}}
 
                         </tr>
                     </thead>
@@ -81,23 +80,18 @@
                             <td>{{$order->id}}</td>
                             <td>{{$order->provider->name}}</td>
                             <td>{{$order->user->name}}</td>
-                            <td>{{$order->driver_id == null ? ($order->delivery_type ?? 'لم يحدد بعد' ) : $order->driver->name }}</td>
-                            <td>{{$order->type_id == 1 ? 'حالي' : 'مجدول'}}</td>
+                            <td>{{$order->product->name}}</td>
 
-                            <td> {{$order->recieve_at ?? '' }} </td>
+                            <td> {{$order->created_at->format('Y-m-d') ?? '' }} </td>
                             <td>
                                 @if($order->status == '0')
                                 <button type="button" class="btn btn-circle green btn-sm">جديد</button>
-                                @elseif($order->status == '1')
-                                <button type="button" class="btn btn-circle blue btn-sm">مقبول</button>
-                                @elseif($order->status == '2')
-                                <button type="button" class="btn btn-circle yellow btn-sm">نشط</button>
-                                @elseif($order->status == '3')
-                                <button type="button" class="btn btn-circle purple btn-sm">مكتمل</button>
+                                @else
+                                <button type="button" class="btn btn-circle blue btn-sm">مكتمل</button>
                                 @endif
                             </td>
-                            <td> {{ convertArabicNumbersToEnglish($order->price) }} </td>
-                            <td> <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a></td>
+                            <td> {{ convertArabicNumbersToEnglish($order->price) }} (ريال)</td>
+                            {{-- <td> <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a></td> --}}
 
                         </tr>
                         @endforeach

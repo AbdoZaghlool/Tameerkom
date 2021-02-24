@@ -62,6 +62,7 @@
                             <th> الاسم</th>
                             <th>رقم الهاتف</th>
                             <th>التفعيل</th>
+                            <th>الحظر</th>
                             <th>عدد المنتجات</th>
                             <th>عدد الطلبات</th>
 
@@ -77,11 +78,21 @@
 
                             <td>{{$user->phone_number}} </td>
 
-                            @if($user->active == 0)
-                            <td><button type="button" class="btn btn-circle red btn-sm">غير مفعل</button></td>
-                            @else
-                            <td><button type="button" class="btn btn-circle blue btn-sm"> مفعل</button></td>
-                            @endif
+                            <td>
+                                @if($user->active == 0)
+                                <button type="button" class="btn btn-circle red btn-sm">غير مفعل</button>
+                                @else
+                                <button type="button" class="btn btn-circle blue btn-sm"> مفعل</button>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if($user->blocked == 1)
+                                <button type="button" class="btn btn-circle red btn-sm">محظور</button>
+                                @else
+                                <button type="button" class="btn btn-circle blue btn-sm"> غير محظور</button>
+                                @endif
+                            </td>
 
                             <td>{{$user->products->count()}} </td>
                             <td>{{$user->providerOrders->count()}} </td>

@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-الطلبات الملغية
+طلبات الالغاء
 @endsection
 
 @section('styles')
@@ -19,17 +19,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="/admin/orders">الطلبات </a>
+            <a href="/admin/cancel-requests">الطلبات </a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض الطلبات الملغية</span>
+            <span>عرض طلبات الالغاء</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title">عرض الطلبات الملغية
-    <small>عرض جميع الطلبات الملغية</small>
+<h1 class="page-title">عرض طلبات الالغاء
+    <small>عرض جميع طلبات الالغاء</small>
 </h1>
 @endsection
 
@@ -42,7 +42,7 @@
             <div class="portlet-title">
                 <div class="caption font-dark">
                     <i class="icon-settings font-dark"></i>
-                    <span class="caption-subject bold uppercase"> الطلبات الملغية</span>
+                    <span class="caption-subject bold uppercase"> طلبات الالغاء</span>
                 </div>
 
             </div>
@@ -62,10 +62,9 @@
                             <th> العميل </th>
                             <th> المنتج </th>
                             <th> وقت الطلب </th>
-                            <th> حالة الطلب </th>
                             <th> سبب الالغاء </th>
                             <th> السعر(ريال) </th>
-                            {{-- <th>عرض التفاصيل</th> --}}
+                            <th>خيارات</th>
 
                         </tr>
                     </thead>
@@ -85,16 +84,22 @@
 
                             <td> {{$order->created_at->format('Y-m-d') ?? '' }} </td>
                             <td>
-                                <button type="button" class="btn btn-circle red btn-sm">جديد</button>
+                                {{$order->notes}}
                             </td>
-                            <td> {{ $order->notes}}</td>
                             <td> {{ convertArabicNumbersToEnglish($order->price) }} (ريال)</td>
-                            {{-- <td> <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a></td> --}}
+                            <td>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger sendConfirmation" type="button" data-name="{{$order->provider->name}}" data-id="{{$order->id}}">
+                                        الموافقة علي الغاء الطلب
+                                    </button>
+                                </span>
+                            </td>
 
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         </div>
         <!-- END EXAMPLE TABLE PORTLET-->
@@ -110,33 +115,52 @@
 <script src="{{ URL::asset('admin/js/table-datatables-managed.min.js') }}"></script>
 <script src="{{ URL::asset('admin/js/sweetalert.min.js') }}"></script>
 <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
+{{-- orders.post-update-cancele-request --}}
+
 <script>
     $(document).ready(function() {
-        var CSRF_TOKEN = $('meta[name="X-CSRF-TOKEN"]').attr('content');
-
-        $('body').on('click', '.delete_attribute', function() {
-            var id = $(this).attr('data');
-
-            var swal_text = 'حذف ' + $(this).attr('data_name') + '؟';
-            var swal_title = 'هل أنت متأكد من الحذف ؟';
-
+        var CSRF_TOKEN = $('input[name="_token"]').val();
+        $('body').on('click', '.sendConfirmation', function() {
+            var id = $(this).attr('data-id');
+            var swal_text = 'الغاء الطلب   ' + $(this).attr('data-name') + '؟';
+            var swal_title = 'هل أنت متأكد من الغاء الطلب؟';
             swal({
                 title: swal_title
                 , text: swal_text
-                , type: "warning"
+                , type: "success"
                 , showCancelButton: true
-                , confirmButtonClass: "btn-warning"
+                , confirmButtonClass: "btn-success"
                 , confirmButtonText: "تأكيد"
                 , cancelButtonText: "إغلاق"
                 , closeOnConfirm: false
             }, function() {
-
-                window.location.href = "{{ url('/') }}" + "/admin/orders/" + id + "/delete";
-
+                $.ajax({
+                    url: "{{ route('orders.post-update-cancele-request') }}"
+                    , type: 'post'
+                    , data: {
+                        "_token": "{{ csrf_token() }}"
+                        , "id": id
+                    , }
+                    , datatype: 'json'
+                    , success: function(data) {
+                        swal({
+                            title: 'تم الالغاء'
+                            , text: 'تم الغاء الطلب بنجاح'
+                            , type: "success"
+                        , });
+                        window.location.reload();
+                    }
+                    , error: function(error) {
+                        console.log(error);
+                        swal({
+                            title: 'حدث خطأ'
+                            , text: 'حدث خطأ ما برجاء المحاولة لاحقا'
+                            , type: "error"
+                        , });
+                    }
+                });
             });
-
         });
-
     });
 
 </script>

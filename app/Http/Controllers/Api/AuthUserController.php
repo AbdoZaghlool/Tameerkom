@@ -89,7 +89,7 @@ class AuthUserController extends Controller
     {
         $rules = [
             'phone_number' => 'required|starts_with:05|digits:10',
-            'app_signature' => 'required',
+            'app_signature' => 'sometimes',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -170,8 +170,8 @@ class AuthUserController extends Controller
             'phone_number' => 'required',
             'password' => 'required',
             'device_token' => 'required',
-            'latitude' => 'sometimes|required',
-            'longitude' => 'sometimes|required',
+            'latitude' => 'sometimes',
+            'longitude' => 'sometimes',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -305,7 +305,6 @@ class AuthUserController extends Controller
             return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
         $user = App\User::where('phone_number', $request->phone_number)->first();
-        //        $user = User::wherePhone($request->phone)->first();
         if ($user) {
             $updated = $user->update(['password' => Hash::make($request->password)]);
         } else {
@@ -365,7 +364,7 @@ class AuthUserController extends Controller
     {
         $rules = [
             'phone_number'  => 'required|unique:users|starts_with:05|digits:10',
-            'app_signature' => 'required',
+            'app_signature' => 'sometimes',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {

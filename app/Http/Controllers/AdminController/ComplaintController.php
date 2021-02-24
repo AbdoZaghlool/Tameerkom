@@ -14,7 +14,7 @@ class ComplaintController extends Controller
      */
     public function index()
     {
-        $complaints = Complaint::with('order.user', 'order.driver')->latest()->get();
+        $complaints = Complaint::with('order', 'order.user')->latest()->get();
         return view('admin.complaints.index', compact('complaints'));
     }
 

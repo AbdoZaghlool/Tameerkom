@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController\ComplaintController;
+use Illuminate\Http\Request;
 
 app()->setLocale('ar');
 Route::get('/', function () {
@@ -82,11 +83,29 @@ Route::prefix('admin')->group(function () {
         Route::post('/notifications/user', 'HomeController@postSendUserNotifications')->name('post-send-user-notifications');
 
 
+        Route::get('/orders/providers-cancele-requests', function () {
+            dd('test');
+        });
+
         // ================================orders=============================================
+        Route::post('orders/update-cancele-status', function (Request $request) {
+            $order = \App\Order::findOrFail($request->id);
+            $order->status = '2';
+            $saved = $order->save();
+            return $saved ? json_encode('done') : json_encode('error');
+        })->name('orders.post-update-cancele-request');
+
         Route::get('/orders', 'OrdersController@index')->name('orders.index');
         Route::get('/orders/canceled', 'OrdersController@canceled')->name('orders.canceled');
         Route::get('/orders/{order}', 'OrdersController@show')->name('orders.show');
+        Route::get('/orders/providers-cancele-requests', 'OrdersController@providersCanceleRequests')->name('orders.cancel-requests');
         Route::get('/orders/{order}/delete', 'OrdersController@delete');
+
+
+        // =====================================  commissions=========================
+        Route::get('commissions', 'OrdersController@commissons')->name('commissions.index');
+        Route::get('commissions/paid', 'OrdersController@paid')->name('commissions.paid');
+        Route::post('commissions/{id}/update-status', 'OrdersController@postUpdateStatus')->name('commissions.post-update-status');
 
 
         // ================================ complaints =============================================

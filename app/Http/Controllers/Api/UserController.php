@@ -44,34 +44,6 @@ class UserController extends Controller
     }
 
     /**
-     * change user image
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function change_image(Request $request)
-    {
-        $rules = [
-            'image' => 'required|mimes:jpeg,bmp,png,jpg|max:5000',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
-        }
-        $user = User::where('id', $request->user()->id)->first();
-        $updated =  $user->update([
-            'image' =>  UploadImageEdit($request->file('image'), 'image', '/uploads/users', $request->user()->image),
-        ]);
-        $success = [
-            'key' => 'image',
-            'value' => User::find($request->user()->id)->image
-        ];
-        return $updated
-            ? ApiController::respondWithSuccess($success)
-            : ApiController::respondWithServerErrorObject();
-    }
-
-    /**
      * get user current orders
      *    0 => active, 1 => compeleted, 3 => canceled
      *

@@ -14,9 +14,10 @@ class Provider extends JsonResource
      */
     public function toArray($request)
     {
-        // $products = $this->load('products');
-        // dd($products);
-
+        $products = this->whenLoaded('products');
+        if($request->products != null){
+            $products = $request->products;
+        }
         return [
             'id'             => (int)$this->id,
             'name'           => $this->name,
@@ -26,7 +27,7 @@ class Provider extends JsonResource
             'city_name'      => $this->city ? (string)$this->city->name : 'no_city',
             'rate'           => $this->getRateValue(),
             'image'          => asset('uploads/users/'.$this->image),
-            // 'prodcuts'       => Product::collection($this->products)
+            'prodcuts'       => Product::collection($products)
         ];
     }
 }

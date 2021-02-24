@@ -3,19 +3,12 @@
 namespace App\Http\Controllers\AdminController;
 
 use App\City;
-use App\Setting;
 use App\Order;
-use App\Device;
 use App\History;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Membership;
-use App\Product;
-use App\Subscription;
-use App\Topic;
 use App\UserDevice;
-use App\VerificationRequest;
-use App\Wallet;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -144,5 +137,19 @@ class HomeController extends Controller
         }
         flash('تم ارسال الاشعار للمستخدمين بنجاح');
         return back();
+    }
+
+    public function providersCanceleRequests()
+    {
+        $records = Order::with('user', 'provider', 'product')->where('status', '3')->latest()->get();
+        return view('admin.orders.canele-requests', compact('records'));
+    }
+
+    public function acceptCanceleRequest(Request $request)
+    {
+        $order = Order::findOrFail($request->order_id);
+        $order->status = '2';
+        $order->save();
+        return json_encode('done');
     }
 }
