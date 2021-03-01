@@ -91,14 +91,14 @@
                                                 <i class="icon-pencil"></i> تعديل
                                             </a>
                                         </li>
-                                        
+                                        @if($report->id !== 1)
                                         <li>
                                             <a class="delete_attribute" data="{{ $report->id }}"
                                                 data_name="{{ $report->name }}">
                                                 <i class="fa fa-times"></i> حذف
                                             </a>
                                         </li>
-                                        
+                                        @endif
                                     </ul>
                                 </div>
                             </td>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App;
 use App\Contact;
+use App\Conversation;
 use App\Device;
 use App\Setting;
 use Carbon\Carbon;
@@ -72,7 +73,6 @@ class ProfileController extends Controller
         return ApiController::respondWithSuccess(array($all));
     }
 
-
     /**
      * get user rate
      *
@@ -108,6 +108,77 @@ class ProfileController extends Controller
                 'title'      => $history->title,
                 'price'      => (double)$history->price,
                 'created_at' => $history->created_at == null ? '' : $history->created_at->format('Y-m-d H:i') ,
+            ]);
+        }
+        return ApiController::respondWithSuccess($arr);
+    }
+
+    /**
+     * user conversations
+     *
+     * @return void
+     */
+    public function myConversations()
+    {
+        $user = request()->user();
+
+        $data = Conversation::with('user', 'provider')
+            ->where('user_id', $user->id)->orWhere('provider_id', $user->id)
+            ->orderBy('created_at', 'DESC')->get();
+
+        if ($data->count() == 0) {
+            $arr = [
+                'key' => 'conversations',
+                'value' => 'لا يوجد بيانات حاليا'
+            ];
+            return ApiController::respondWithErrorArray($arr);
+        }
+
+        $arr = [];
+        foreach ($data as $conversation) {
+            $lastMessage = $conversation->chats()->first();
+            array_push($arr, [
+                'id'             => $conversation->id,
+                'user_id'        => $conversation->user_id,
+                'user_name'      => $conversation->user->name,
+                'user_image'     => asset('uploads/users/'.$conversation->user->image),
+                'provider_id'    => $conversation->provider_id,
+                'provider_name'  => $conversation->provider->name,
+                'provider_image' => asset('uploads/users/'.$conversation->provider->image),
+                'last_message'   => $lastMessage == null ? '' : $lastMessage->message,
+                'created_at'     => $conversation->created_at == null ? '' : $conversation->created_at->format('Y-m-d H:i') ,
+            ]);
+        }
+        return ApiController::respondWithSuccess($arr);
+    }
+
+    /**
+     * get conversation messages
+     *
+     * @param int $id
+     * @return void
+     */
+    public function conversationMessages($id)
+    {
+        $conversation = Conversation::with('chats')->find($id);
+        if (!$conversation) {
+            $err = [
+                'key' => 'conversation',
+                'value' => 'لا يوجد محادثة بهذا الرقم'
+            ];
+            return ApiController::respondWithErrorArray($err);
+        }
+        $arr = [];
+        foreach ($conversation->chats as $message) {
+            array_push($arr, [
+                'id'           => (int)$message->id,
+                'message'      => (string)$message->message,
+                'seen'         => (int)$message->seen,
+                'file'         => $message->file == null ? '' : asset('uploads/chats/'.$message->file),
+                'sender_id'    => (int)$message->user_id,
+                'sender_name'  => $message->user->name,
+                'sender_image' => asset('uploads/users/'.$message->user->image),
+                'created_at'   => $message->created_at == null ? '' : $message->created_at->format('Y-m-d H:i') ,
             ]);
         }
         return ApiController::respondWithSuccess($arr);

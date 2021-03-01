@@ -94,6 +94,14 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
         Route::get('/provider-orders', [PartnerController::class, 'myOrders']);
         Route::post('upload-payment-image', [PartnerController::class, 'uploadImage']);
 
+        /** chat section */
+        Route::post('connect-room', [MainController::class, 'connectRoom']);
+        Route::post('disconnect-room', [MainController::class, 'disconnectRoom']);
+        Route::post('send-message', [MainController::class, 'sendMessage']);
+        Route::get('my-conversations', [ProfileController::class, 'myConversations']);
+        Route::get('conversation-messages/{conversation}', [ProfileController::class, 'conversationMessages']);
+
+
         /** family comments and rates */
         Route::get('comments-rates', [PartnerController::class,'usersComments']);
 

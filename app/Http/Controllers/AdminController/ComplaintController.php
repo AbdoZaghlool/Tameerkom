@@ -28,7 +28,7 @@ class ComplaintController extends Controller
     {
         $complaint = Complaint::findOrFail($id);
         $complaint->delete();
-        flash('تم حذف الشكوى بنجاح');
+        flash('تم حذف الشكوى بنجاح')->warning();
         return back();
     }
 }

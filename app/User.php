@@ -103,6 +103,11 @@ class User extends Authenticatable //implements JWTSubject
         return $this->hasMany(History::class);
     }
 
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
     public function city()
     {
         return $this->belongsTo(City::class);

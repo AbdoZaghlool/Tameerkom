@@ -52,7 +52,7 @@
                         <div class="col-lg-4">
                             <div class="caption font-weight-light float-left" style="float: left; color:red;">
                                 <i class="icon-arrow-up font-dark"></i>
-                                <span class="caption-subject bold uppercase"><a href="{{ url()->previous() }}">العودة للخلف</a></span>
+                                <span class="caption-subject bold uppercase"><a href="{{ route('properties.index') }}">العودة للخلف</a></span>
                             </div>
                         </div>
                     </div>

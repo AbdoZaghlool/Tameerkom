@@ -39,7 +39,7 @@ class SplashController extends Controller
     {
         $this->validate($request, [
             'image'       => 'required|mimes:jpeg,jpg,png|max:2048',
-            'product_id'  => 'nullable|exists:products',
+            'product_id'  => 'nullable|exists:products,id',
             'link'        => 'nullable',
         ]);
         if ($request->product_id && $request->link) {
@@ -76,7 +76,7 @@ class SplashController extends Controller
     public function update(Request $request, Slider $splash)
     {
         $this->validate($request, [
-            'product_id' => 'nullable|exists:products',
+            'product_id' => 'nullable|exists:products,id',
             'image'       => 'nullable|mimes:jpeg,jpg,png|max:2048'
         ]);
 

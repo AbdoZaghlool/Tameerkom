@@ -12,6 +12,10 @@ Route::get('/', function () {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/chat', function () {
+    return view('chat');
+});
+
 Auth::routes();
 
 Route::get('/get_sub_cat/{model}/{col}/{id}', function ($model, $col, $id) {
@@ -46,15 +50,15 @@ Route::prefix('admin')->group(function () {
         Route::get('/roles/{id}/delete', 'RoleController@destroy')->name('roles.destroy');
         Route::resource('roles', 'RoleController');
         // ================================application-settings====================================
-        Route::get('setting', 'SettingController@index');
-        Route::post('add/settings', 'SettingController@store');
+        Route::get('setting', 'SettingController@index')->name('settings.index');
+        Route::post('add/settings', 'SettingController@store')->name('settings.store');
 
         // ================================about&terms====================================
-        Route::get('pages/about', 'PageController@about');
-        Route::post('add/pages/about', 'PageController@store_about');
+        Route::get('pages/about', 'PageController@about')->name('about.index');
+        Route::post('add/pages/about', 'PageController@store_about')->name('about.store');
 
-        Route::get('pages/terms', 'PageController@terms');
-        Route::post('add/pages/terms', 'PageController@store_terms');
+        Route::get('pages/terms', 'PageController@terms')->name('terms.index');
+        Route::post('add/pages/terms', 'PageController@store_terms')->name('terms.store');
 
         // ================================main-categories====================================
         Route::get('/main-categories/{category}/delete', 'MainCategoriesController@destroy');
@@ -76,13 +80,13 @@ Route::prefix('admin')->group(function () {
         Route::get('/property-values/{property}', 'ValueController@index')->name('property-values.index');
         Route::get('/property-values/{property}/create', 'ValueController@create')->name('property-values.create');
         Route::post('/property-values/{property}/store', 'ValueController@store')->name('property-values.store');
-        Route::get('/property-values/{id}/delete', 'ValueController@destroy')->name('property-values.delete');
+        Route::get('/property-values/{id}/delete', 'ValueController@destroy')->name('property-values.destroy');
 
 
         // ================================ notifications =============================================
-        Route::get('/notifications', 'HomeController@sendNotifications');
+        Route::get('/notifications', 'HomeController@sendNotifications')->name('show-notification-form');
         Route::post('/notifications', 'HomeController@postSendNotifications')->name('post-send-notifications');
-        Route::get('/notifications/user', 'HomeController@sendUserNotifications');
+        Route::get('/notifications/user', 'HomeController@sendUserNotifications')->name('show-notification-form');
         Route::post('/notifications/user', 'HomeController@postSendUserNotifications')->name('post-send-user-notifications');
 
 
@@ -112,7 +116,7 @@ Route::prefix('admin')->group(function () {
 
 
         // ================================ complaints =============================================
-        Route::get('/complaints/{id}/delete', [ComplaintController::class,'delete'])->name('complaints.delete');
+        Route::get('/complaints/{id}/delete', [ComplaintController::class,'delete'])->name('complaints.destroy');
         Route::get('/complaints', [ComplaintController::class,'index'])->name('complaints.index');
 
 

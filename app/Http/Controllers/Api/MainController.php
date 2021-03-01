@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Category;
+use App\Chat;
 use App\City;
+use App\Conversation;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Category as CategoryResource;
 use App\Http\Resources\Provider as ProviderResource;
@@ -13,6 +15,7 @@ use App\Product;
 use App\Region;
 use App\Slider;
 use App\User;
+use App\UserDevice;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -202,5 +205,130 @@ class MainController extends Controller
                 'value' => 'لا يوجد بيانات تماثل ' . $request->keyword,
             ];
         return ApiController::respondWithErrorArray($err);
+    }
+
+    /**
+     * connect room
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function connectRoom(Request $request)
+    {
+        $rules = [
+            'room_id'  => 'required|exists:conversations,id'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return ApiController::respondWithErrorArray(validateRules($validator->errors(), $rules));
+        }
+
+        $room = Conversation::find($request->room_id);
+        if ($room->user_id == $request->user()->id) {
+            $room->update(['user_online'=>1]);
+        } else {
+            $room->update(['provider_online'=>1]);
+        }
+        return response()->json(['mainCode'=> 1,'code' =>  200 , 'user_phone'=>$request->user()->phone_number ], 200);
+    }
+
+    /**
+     * disconnect room
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function disconnectRoom(Request $request)
+    {
+        $room = Conversation::find($request->room_id);
+        $user = User::where('phone_number', $request->phone)->first();
+        if ($user) {
+            if ($room->user_id == $user->id) {
+                $room->update(['user_online'=>0]);
+            } else {
+                $room->update(['provider_online'=>0]);
+            }
+            return response()->json(['mainCode'=> 1,'code' =>  200 , 'phone'=>$user->phone_number ]);
+        } else {
+            return response()->json(['mainCode'=> 0,'code' =>  422 ,'message'=> 'user_disconnect' ]);
+        }
+    }
+
+    /**
+     * send chat message
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function sendMessage(Request $request)
+    {
+        $rules = [
+            'room_id'  => 'required|exists:conversations,id',
+            'message'  => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
+        }
+
+        $request['first'] = $request->user()->id;
+        $room = Conversation::whereId($request->room_id)
+            ->where('user_online', 1)
+            ->where('provider_online', 1)
+            ->first();
+        if ($room) {
+            $request['seen']=1;
+        // $room->update(['seen'=>1]);
+        } else {
+            $room = Conversation::find($request->room_id);
+            if ($room->user_online == 0) {
+                /* notifications*/
+                $devicesTokens = UserDevice::where('user_id', $room->user_id)
+                    ->get()
+                    ->pluck('device_token')
+                    ->toArray();
+                $title = 'الرسايل';
+                $message = $request->file == null ? $request->message : 'تم  ارسال مرفق';
+                if ($devicesTokens) {
+                    sendMultiNotification($title, $request->user()->name." : ". $message, $devicesTokens);
+                }
+                //end notifications/
+                // $room->update(['sender_online'=>1]);
+            } else {
+                /* notifications*/
+                $devicesTokens = UserDevice::where('user_id', $room->provider_id)
+                    ->get()
+                    ->pluck('device_token')
+                    ->toArray();
+                $title = 'الرسايل';
+                $message = $request->file == null ? $request->message : 'تم  ارسال مرفق';
+                if ($devicesTokens) {
+                    sendMultiNotification($title, $request->user()->name." : ". $message, $devicesTokens);
+                }
+            }
+            $room->update(['seen'=>0]);
+        }
+        if ($request->file != null) {
+            $chatMessage =  Chat::create([
+                'conversation_id' => $request->room_id,
+                'user_id'   => $request->user()->id,
+                'file' => $request->file,
+            ]);
+        } else {
+            $chatMessage =  Chat::create([
+                'conversation_id' => $request->room_id,
+                'user_id'   => $request->user()->id,
+                'message' => $request->message ?? 'message',
+            ]);
+        }
+        $data = [
+            'id'              => $chatMessage->id,
+            'conversation_id' => intval($chatMessage->conversation_id),
+            'user_id'         => $chatMessage->user_id,
+            'message'         => $chatMessage->message,
+            'file'            => $chatMessage->file,
+            'created_at'      => $chatMessage->created_at->format('Y-m-d'),
+        ];
+        return response()->json(['mainCode'=> 1,'code' =>  200 , 'data'=>$data], 200);
     }
 }
