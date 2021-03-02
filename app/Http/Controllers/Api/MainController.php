@@ -207,6 +207,25 @@ class MainController extends Controller
         return ApiController::respondWithErrorArray($err);
     }
 
+    public function createConversation(Request $request)
+    {
+        $rules = [
+            'provider_id'  => 'required|exists:users,id'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
+        }
+        $conversation = Conversation::updateOrCreate([
+            'user_id' => $request->user()->id,
+            'provider_id' => $request->provider_id,
+        ]);
+        $res = [
+            'key' => 'تم انشاء المحادثة', 'conversation_id' => (int) $conversation->id
+        ];
+        return ApiController::respondWithSuccess($res);
+    }
+
     /**
      * connect room
      *
@@ -220,7 +239,7 @@ class MainController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return ApiController::respondWithErrorArray(validateRules($validator->errors(), $rules));
+            return ApiController::respondWithErrorObject(validateRules($validator->errors(), $rules));
         }
 
         $room = Conversation::find($request->room_id);

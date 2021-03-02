@@ -165,7 +165,7 @@ class OrderController extends Controller
             'order_id' => 'required|exists:orders,id',
             'rate' => 'required|in:1,2,3,4,5',
             'to_user_id' => 'required|exists:users,id',
-            'note' => 'sometimes|min:8',
+            'comment' => 'sometimes|min:8',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -176,7 +176,7 @@ class OrderController extends Controller
             'to_user_id' => $request->to_user_id], [
             'order_id' => $request->order_id,
             'rate' => $request->rate,
-            'note' => $request->note,
+            'comment' => $request->comment,
         ]);
         if ($created) {
             return ApiController::respondWithSuccess('تم حفظ تقييمك');

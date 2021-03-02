@@ -95,6 +95,8 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
         Route::post('upload-payment-image', [PartnerController::class, 'uploadImage']);
 
         /** chat section */
+
+        Route::post('start-chat', [MainController::class, 'createConversation']);
         Route::post('connect-room', [MainController::class, 'connectRoom']);
         Route::post('disconnect-room', [MainController::class, 'disconnectRoom']);
         Route::post('send-message', [MainController::class, 'sendMessage']);

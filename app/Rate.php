@@ -11,7 +11,7 @@ class Rate extends Model
         'to_user_id',
         'order_id',
         'rate',
-        'note',
+        'comment',
     ];
 
 
