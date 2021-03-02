@@ -22,4 +22,19 @@ class City extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    /**
+     * filter the model by name, take the sub cat or not
+     *
+     * @param QueryBiulder $query
+     * @param Request $params
+     * @return object
+     */
+    public function scopeFilter($query, $params)
+    {
+        if (isset($params) && trim($params !== '')) {
+            $query->where('region_id', $params);
+        }
+        return $query;
+    }
 }

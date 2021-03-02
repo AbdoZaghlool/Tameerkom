@@ -71,7 +71,7 @@ class CheckBlocked extends Command
                 }
 
                 if ($provider->blocked == 1) {
-                    $oldNotifications=Notification::where('user_id', $provider->id)->where('type', 4)->first();
+                    $oldNotifications = Notification::where('user_id', $provider->id)->where('type', 4)->first();
                     if ($oldNotifications == null) {
                         $devicesTokens = UserDevice::where('user_id', $provider->id)
                             ->pluck('device_token')

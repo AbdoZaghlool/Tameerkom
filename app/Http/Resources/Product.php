@@ -26,6 +26,7 @@ class Product extends JsonResource
             'category_name'      => (string)$this->category->name??'',
             'provider_id'        => (int)$this->provider_id,
             'provider_name'      => (string)$this->provider->name,
+            'provider_city'      => (string)$this->provider->city->name,
             'provider_image'     => (string)asset('uploads/users/'.$this->provider->image),
             'provider_blocked'   => (boolean)$this->provider->blocked,
             'provider_fav_state' => $logedUser == null ? false : ($logedUser->favouritUsers()->where('provider_id', $this->provider->id)->first() == null ? false : true),

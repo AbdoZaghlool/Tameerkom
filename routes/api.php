@@ -33,7 +33,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
     Route::get('/splashs', [MainController::class, 'splashs']);
     Route::get('/regions', [MainController::class, 'regions']);
-    Route::get('/cities/{region_id}', [MainController::class, 'cities']);
+    Route::get('/cities/{region_id?}', [MainController::class, 'cities']);
     Route::get('/categories/{category_id?}', [MainController::class, 'mainCat']);
 
 

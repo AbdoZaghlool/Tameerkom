@@ -92,9 +92,9 @@ class MainController extends Controller
      * @param Region $region_id
      * @return json response
      */
-    public function cities($region_id)
+    public function cities($region_id = null)
     {
-        $data = City::with('region')->where('region_id', $region_id)->get();
+        $data = City::with('region')->filter($region_id)->get();
         if ($data->count() == 0) {
             $err = [
                 'key' => 'cities',
@@ -107,7 +107,7 @@ class MainController extends Controller
             array_push($arr, [
                 'id'          => $value->id,
                 'name'        => $value->name,
-                'region_id'   => (int)$region_id,
+                'region_id'   => (int)$value->region_id,
                 'region_name' => $value->region->name,
             ]);
         }

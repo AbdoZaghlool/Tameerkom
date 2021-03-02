@@ -30,7 +30,7 @@ class Order extends JsonResource
             'recieve_place'  => (string)$this->recieve_place,
             'notes'          => (string)$this->notes,
             'created_at'     => $this->created_at->format('Y-m-d H:i') ?? '2020-10-25 15:20',
-            'properties'     => $this->getAdditions($this->property_values),
+            'product'        => new Product($this->product),
         ];
     }
 }

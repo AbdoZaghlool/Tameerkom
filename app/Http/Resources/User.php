@@ -20,7 +20,7 @@ class User extends JsonResource
             'phone_number'     => (string)$this->phone_number,
             'name'             => (string)$this->name,
             'type'             => (string)$this->getType(),
-            'blocked'          => (int)$this->blocked,
+            'blocked'          => (bool)$this->blocked,
             'image'            => asset('uploads/users/'.$this->image),
             'email'            => (string)$this->email??'-',
             'api_token'        => (string)$this->api_token??'-',
