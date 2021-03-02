@@ -14,8 +14,8 @@ class Provider extends JsonResource
      */
     public function toArray($request)
     {
-        $products = this->whenLoaded('products');
-        if($request->products != null){
+        $products = $this->whenLoaded('products');
+        if ($request->products != null) {
             $products = $request->products;
         }
         return [

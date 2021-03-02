@@ -31,7 +31,7 @@ class MainController extends Controller
     {
         $user = User::find($id);
         if ($user) {
-            return ApiController::respondWithSuccess(new ProviderResource($user));
+            return ApiController::respondWithSuccess(new UserResource($user));
         }
         return ApiController::respondWithServerErrorArray();
     }
