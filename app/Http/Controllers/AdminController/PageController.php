@@ -33,7 +33,8 @@ class PageController extends Controller
         AboutUs::updateOrCreate(['id'=>1], [
             'content'=>$request->content
         ]);
-        return Redirect::back()->with('success', 'تم حفظ البيانات بنجاح');
+        flash('تم حفظ البيانات بنجاح')->important();
+        return back();
     }
 
     /**
@@ -59,6 +60,7 @@ class PageController extends Controller
         TermsCondition::updateOrCreate(['id'=>1], [
                 'content'=>$request->content
             ]);
-        return Redirect::back()->with('success', 'تم حفظ البيانات بنجاح');
+        flash('تم حفظ البيانات بنجاح')->important();
+        return back();
     }
 }

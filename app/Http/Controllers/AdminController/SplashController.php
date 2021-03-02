@@ -43,7 +43,7 @@ class SplashController extends Controller
             'link'        => 'nullable',
         ]);
         if ($request->product_id && $request->link) {
-            flash('لا يمكن اضافة الرابط والمنتج معا')->error();
+            flash('لا يمكن اضافة الرابط والمنتج معا')->error()->important();
             return back()->withInput();
         }
         Slider::create([
@@ -51,7 +51,7 @@ class SplashController extends Controller
             'product_id'  => $request->product_id == 0 ? null : $request->product_id,
             'link'        => $request->link,
         ]);
-        flash('تم اضافة البانر بنجاح');
+        flash('تم اضافة البانر بنجاح')->important();
         return redirect()->route('splashs.index');
     }
 
@@ -81,7 +81,7 @@ class SplashController extends Controller
         ]);
 
         if ($request->product_id && $request->link) {
-            flash('لا يمكن اضافة الرابط والمنتج معا')->error();
+            flash('لا يمكن اضافة الرابط والمنتج معا')->error()->important();
             return back()->withInput();
         }
 
@@ -90,7 +90,7 @@ class SplashController extends Controller
             'link'        => $request->link ?? $splash->link,
             'image'       => $request->image == null ? $splash->image : UploadImageEdit($request->image, 'slide', 'uploads/sliders', $splash->image)
         ]);
-        flash('تم تعديل البانر بنجاح');
+        flash('تم تعديل البانر بنجاح')->important();
         return redirect()->route('splashs.index');
     }
 
@@ -107,7 +107,7 @@ class SplashController extends Controller
         if (file_exists(public_path('uploads/sliders/' . $image))) {
             unlink(public_path('uploads/sliders/' . $image));
         }
-        flash('تم الحذف بنجاح');
+        flash('تم الحذف بنجاح')->important();
         return back();
     }
 }

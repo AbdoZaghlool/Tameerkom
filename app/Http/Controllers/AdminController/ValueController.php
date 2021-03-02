@@ -43,7 +43,7 @@ class ValueController extends Controller
             'name' => $request->name,
             'property_id' =>$property->id
         ]);
-        flash('تم اضافة القيمة بنجاح');
+        flash('تم اضافة القيمة بنجاح')->important();
         return redirect()->route('property-values.index', $property);
     }
 
@@ -91,7 +91,7 @@ class ValueController extends Controller
     {
         $value = PropertyValue::findOrFail($id);
         $value->delete();
-        flash('تم حذف القيمة بنجاح')->warning();
+        flash('تم حذف القيمة بنجاح')->warning()->important();
         return back();
     }
 }

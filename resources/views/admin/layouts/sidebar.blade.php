@@ -35,9 +35,10 @@
 
             <li class="nav-item {{ strpos(URL::current(), 'admin/roles') !== false ? 'active' : '' }}">
                 <a href="{{ route('roles.index')}}" class="nav-link ">
-                    <i class="icon-layers"></i>
+                    <i class="icon-layers" style="color: aqua;"></i>
                     <span class="title"> صلاحيات المديرين</span>
                     <span class="pull-right-container"></span>
+                    <span class="badge badge-success">{!! count(\App\Role::get()) !!}</span>
                 </a>
             </li>
 
@@ -102,7 +103,7 @@
 
             <li class="nav-item {{ strpos(URL::current(), 'admin/orders') !== false ? 'active' : '' }}">
                 <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="icon-settings" style="color: aqua;"></i>
+                    <i class="fa fa-shopping-bag" style="color: aqua;"></i>
                     <span class="title">الطلبات</span>
                     <span class="arrow"></span>
                 </a>
@@ -130,7 +131,7 @@
 
             <li class="nav-item {{ strpos(URL::current(), 'admin/commissions') !== false ? 'active' : '' }}">
                 <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="icon-settings" style="color: aqua;"></i>
+                    <i class="fa fa-money" style="color: aqua;"></i>
                     <span class="title">العمولات</span>
                     <span class="arrow"></span>
                 </a>

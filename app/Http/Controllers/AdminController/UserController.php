@@ -88,7 +88,7 @@ class UserController extends Controller
             'commercial_record' => $request->commercial_record,
         ]);
 
-        flash('تم اضافة المستخدم بنجاح')->success();
+        flash('تم اضافة المستخدم بنجاح')->success()->important();
 
         if ($type == 0) {
             return redirect('admin/users');
@@ -152,7 +152,7 @@ class UserController extends Controller
             'commercial_record' => $request->commercial_record,
         ]);
 
-        flash()->success('تم تعديل بيانات المستخدم');
+        flash()->success('تم تعديل بيانات المستخدم')->important();
         if ($type == 0) {
             return redirect('admin/users');
         } elseif ($type == 1) {
@@ -210,7 +210,7 @@ class UserController extends Controller
         if (file_exists(public_path('uploads/users/') . $image) && $image != 'default.png') {
             unlink(public_path('uploads/users/') . $image);
         }
-        flash('تم الحذف بنجاح')->warning();
+        flash('تم الحذف بنجاح')->warning()->important();
         return back();
     }
 }

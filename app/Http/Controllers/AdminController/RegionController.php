@@ -41,7 +41,7 @@ class RegionController extends Controller
             'name' => 'required',
         ]);
         Region::create($request->all());
-        flash('تم اضافة المنطقة بنجاح')->success();
+        flash('تم اضافة المنطقة بنجاح')->success()->important();
         return redirect()->route('regions.index');
     }
 
@@ -80,7 +80,7 @@ class RegionController extends Controller
             'name' => 'required',
         ]);
         $region->update($request->all());
-        flash('تم تعديل المنطقة بنجاح')->success();
+        flash('تم تعديل المنطقة بنجاح')->success()->important();
         return redirect()->route('regions.index');
     }
 
@@ -95,11 +95,11 @@ class RegionController extends Controller
         $region = Region::find($id);
         $check = $region->cities == [] ? 0 : $region->cities;
         if ($check->count() > 0) {
-            flash('لا يمكن حذف هذه المنطقة لان بها مدن')->error();
+            flash('لا يمكن حذف هذه المنطقة لان بها مدن')->error()->important();
             return back();
         }
         $region->delete();
-        flash('تم حذف المنطقة بنجاح')->warning();
+        flash('تم حذف المنطقة بنجاح')->warning()->important();
         return back();
     }
 }

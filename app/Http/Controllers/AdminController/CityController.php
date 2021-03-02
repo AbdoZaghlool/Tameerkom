@@ -42,7 +42,7 @@ class CityController extends Controller
             'region_id' => 'required'
         ]);
         City::create($request->all());
-        flash('تم اضافة المدينة بنجاح')->success();
+        flash('تم اضافة المدينة بنجاح')->success()->important();
         return redirect()->route('cities.index');
     }
 
@@ -74,7 +74,7 @@ class CityController extends Controller
             'name' => $request->name,
             'region_id' => $request->region_id
         ]);
-        flash('تم تعديل المدينة بنجاح')->success();
+        flash('تم تعديل المدينة بنجاح')->success()->important();
         return redirect()->route('cities.index');
     }
 
@@ -93,7 +93,7 @@ class CityController extends Controller
             return back();
         }
         $city->delete();
-        flash('تم حذف المدينة بنجاح')->warning();
+        flash('تم حذف المدينة بنجاح')->warning()->important();
         return back();
     }
 }

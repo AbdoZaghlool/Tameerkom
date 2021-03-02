@@ -45,7 +45,7 @@ class MainCategoriesController extends Controller
             'name' => $request->name,
             'image' => UploadImage($request->file('image'), 'category', '/uploads/categories')
         ]);
-        flash('تم اضافة القسم بنجاح')->success();
+        flash('تم اضافة القسم بنجاح')->success()->important();
         return redirect()->route('main-categories.index');
     }
 
@@ -80,7 +80,7 @@ class MainCategoriesController extends Controller
             'name' => $request->name,
             'image' => $request->file('image') == null ? $category->image : UploadImageEdit($request->file('image'), 'category', '/uploads/categories', $category->image)
         ]);
-        flash('تم تعديل القسم بنجاح')->success();
+        flash('تم تعديل القسم بنجاح')->success()->important();
         return redirect()->route('main-categories.index');
     }
 
@@ -103,7 +103,7 @@ class MainCategoriesController extends Controller
         if (file_exists(public_path('/uploads/categories/'.$image))) {
             unlink(public_path('/uploads/categories/'.$image));
         }
-        flash('تم حذف القسم بنجاح')->warning();
+        flash('تم حذف القسم بنجاح')->warning()->important();
         return back();
     }
 }

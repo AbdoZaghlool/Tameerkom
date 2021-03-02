@@ -30,11 +30,7 @@
 @endsection
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+@include('flash::message')
 <div class="row">
 
     <div class="col-md-8">
@@ -59,59 +55,58 @@
                         <div class="portlet-body form">
                             <div class="form-horizontal" role="form">
                                 <div class="form-body">
-                                    
+
                                     {{-- <div class="form-group">
                                         <label class="col-md-3 control-label">العنوان</label>
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" placeholder="العنوان" name="title"
                                                 value="{{$settings->title}}">
-                                        </div>
-                                    </div> --}}
-
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">المحتوي</label>
-                                        <div class="col-md-9">
-                                            <textarea type="text" rows="10" class="form-control" placeholder="المحتوي"
-                                                name="content">{{$settings->content ?? ''}}</textarea>
-                                        </div>
-                                    </div>
-
                                 </div>
+                            </div> --}}
 
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">المحتوي</label>
+                                <div class="col-md-9">
+                                    <textarea type="text" rows="10" class="form-control" placeholder="المحتوي" name="content">{{$settings->content ?? ''}}</textarea>
+                                </div>
                             </div>
+
                         </div>
-                    </div>
-                    <!-- END SAMPLE FORM PORTLET-->
 
-
-                </div>
-
-
-                <!-- END CONTENT BODY -->
-            </div>
-            <!-- END CONTENT -->
-
-
-
-
-
-
-
-            <div class="form-actions">
-                <div class="row">
-                    <div class="col-md-offset-3 col-md-9">
-                        <button type="submit" class="btn green">حفظ</button>
                     </div>
                 </div>
             </div>
-        </form>
-        <!-- END TAB PORTLET-->
-
-
-
+            <!-- END SAMPLE FORM PORTLET-->
 
 
     </div>
+
+
+    <!-- END CONTENT BODY -->
+</div>
+<!-- END CONTENT -->
+
+
+
+
+
+
+
+<div class="form-actions">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-9">
+            <button type="submit" class="btn green">حفظ</button>
+        </div>
+    </div>
+</div>
+</form>
+<!-- END TAB PORTLET-->
+
+
+
+
+
+</div>
 </div>
 
 @endsection
@@ -121,6 +116,7 @@
 <script src="{{ URL::asset('admin/ckeditor/ckeditor.js') }}"></script>
 <script>
     CKEDITOR.replace('description2');
+
 </script>
 
 

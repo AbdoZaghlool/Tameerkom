@@ -30,11 +30,7 @@
 @endsection
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+@include('flash::message')
 <div class="row ">
 
     <div class="col-md-10 text-center">

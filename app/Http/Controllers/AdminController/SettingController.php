@@ -51,6 +51,7 @@ class SettingController extends Controller
                 'logo'=> UploadImageEdit($request->logo, 'dashboard-logo', 'images', $record->logo)
             ]);
         }
-        return back()->with('success', 'تم حفظ البيانات بنجاح');
+        flash('تم حفظ البيانات بنجاح')->important();
+        return back();
     }
 }

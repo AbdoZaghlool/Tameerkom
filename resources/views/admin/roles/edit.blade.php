@@ -48,7 +48,7 @@
                 <div class="col-md-12">
                     <div class="portlet light ">
 
-                        
+
 
                         {!! Form::model($model, ['action'=>['AdminController\RoleController@update', $model->id], 'method'=>'put']) !!}
 
@@ -64,20 +64,18 @@
                             <div class="row">
 
                                 @forelse ($permissions as $permission)
-                                    <div class="col-sm-3">
-                                        <div class="form-check">
-                                            <input name="permission_list[]"  class="custom-checkbox" id="defualtCheck{{$permission->id}}" type="checkbox"
-                                                value="{{$permission->id}}"
-                                            @if($model->hasPermission($permission->name))
-                                                checked
-                                            @endif>
-                                            <label class="form-check-label" for="defaultCheck{{$permission->id}}">
-                                                {{$permission->display_name}}
-                                            </label>
-                                        </div>
+                                <div class="col-sm-3">
+                                    <div class="form-check">
+                                        <input name="permission_list[]" class="custom-checkbox" id="defaultCheck{{$permission->id}}" type="checkbox" value="{{$permission->id}}" @if($model->hasPermission($permission->name))
+                                        checked
+                                        @endif>
+                                        <label class="form-check-label" for="defaultCheck{{$permission->id}}">
+                                            {{$permission->display_name}}
+                                        </label>
                                     </div>
+                                </div>
                                 @empty
-                                    echo ('no permissions yet !');
+                                echo ('no permissions yet !');
                                 @endforelse
                             </div>
                         </div>
@@ -103,22 +101,3 @@
 <script src="{{ URL::asset('admin/js/bootstrap-fileinput.js') }}"></script>
 
 @endsection
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

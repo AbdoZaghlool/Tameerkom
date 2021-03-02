@@ -5,13 +5,15 @@
 @endsection
 
 @section('styles')
-#myChart{
+#myChart
+{
 width:50%; !important;
 height:250px; !important;
 float: left;
 }
 
-#myChart_2{
+#myChart_2
+{
 width: 50%;
 float: right;
 }
@@ -94,7 +96,7 @@ float: right;
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light red" href="{{route('cities.index')}}">
+        <a class="dashboard-stat dashboard-stat-light blue" href="{{route('cities.index')}}">
             <div class="visual">
                 <i class="fa fa-building-o"></i>
             </div>
@@ -108,7 +110,7 @@ float: right;
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light blue" href="{{route('main-categories.index')}}">
+        <a class="dashboard-stat dashboard-stat-light yellow" href="{{route('main-categories.index')}}">
             <div class="visual">
                 <i class="fa fa-sitemap"></i>
             </div>
@@ -121,7 +123,19 @@ float: right;
         </a>
     </div>
 
-
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light green" href="{{route('properties.index')}}">
+            <div class="visual">
+                <i class="fa fa-sitemap"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Property::count()}}</span>
+                </div>
+                <div class="desc"> خصائص الاقسام </div>
+            </div>
+        </a>
+    </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <a class="dashboard-stat dashboard-stat-light red" href="{{route('providers.index')}}">
@@ -138,7 +152,77 @@ float: right;
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light blue" href="{{route('complaints.index')}}">
+        <a class="dashboard-stat dashboard-stat-light yellow" href="{{route('orders.index')}}">
+            <div class="visual">
+                <i class="fa fa-shopping-basket"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Order::where('status','0')->count()}}</span>
+                </div>
+                <div class="desc"> الطلبات النشطة</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light blue" href="{{route('orders.index')}}">
+            <div class="visual">
+                <i class="fa fa-shopping-basket"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Order::where('status','1')->count()}}</span>
+                </div>
+                <div class="desc"> الطلبات المكتملة</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light red" href="{{route('orders.canceled')}}">
+            <div class="visual">
+                <i class="fa fa-shopping-basket"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Order::where('status','2')->count()}}</span>
+                </div>
+                <div class="desc"> الطلبات الملغية</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light green" href="{{route('commissions.index')}}">
+            <div class="visual">
+                <i class="fa fa-money"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Order::where('status','1')->where('payment_status',0)->count()}}</span>
+                </div>
+                <div class="desc"> العمولات المستحقة </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light green" href="{{route('commissions.paid')}}">
+            <div class="visual">
+                <i class="fa fa-money"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Order::where('status','1')->where('payment_status',1)->count()}}</span>
+                </div>
+                <div class="desc"> العمولات المدفوعة </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light red" href="{{route('complaints.index')}}">
             <div class="visual">
                 <i class="icon-arrow-down"></i>
             </div>
@@ -151,69 +235,25 @@ float: right;
         </a>
     </div>
 
-
-    {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light blue" href="{{route('orders.index')}}">
-    <div class="visual">
-        <i class="fa fa-shopping-basket"></i>
-    </div>
-    <div class="details">
-        <div class="number">
-            <span>{{App\Order::whereIn('type_id',[1,3])->count()}}</span>
-        </div>
-        <div class="desc"> الطلبات الحالية</div>
-    </div>
-    </a>
-</div> --}}
-
-{{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light green" href="{{route('orders.index')}}">
-<div class="visual">
-    <i class="fa fa-shopping-basket"></i>
-</div>
-<div class="details">
-    <div class="number">
-        <span>{{App\Order::whereIn('type_id',[2,3])->count()}}</span>
-    </div>
-    <div class="desc"> الطلبات المجدولة</div>
-</div>
-</a>
-</div> --}}
-
-<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-    <a class="dashboard-stat dashboard-stat-light red" href="{{route('orders.canceled')}}">
-        <div class="visual">
-            <i class="fa fa-shopping-basket"></i>
-        </div>
-        <div class="details">
-            <div class="number">
-                <span>{{App\Order::where('status','4')->count()}}</span>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a class="dashboard-stat dashboard-stat-light blue" href="{{route('splashs.index')}}">
+            <div class="visual">
+                <i class="fa fa-image"></i>
             </div>
-            <div class="desc"> الطلبات الملغية</div>
-        </div>
-    </a>
-</div>
-
-
-<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-    <a class="dashboard-stat dashboard-stat-light yellow" href="{{route('splashs.index')}}">
-        <div class="visual">
-            <i class="fa fa-image"></i>
-        </div>
-        <div class="details">
-            <div class="number">
-                <span>{{App\Slider::get()->count()}}</span>
+            <div class="details">
+                <div class="number">
+                    <span>{{App\Slider::get()->count()}}</span>
+                </div>
+                <div class="desc">البنرات الاعلانية</div>
             </div>
-            <div class="desc">البنرات الاعلانية</div>
-        </div>
-    </a>
-</div>
+        </a>
+    </div>
 
 
 
 </div>
 
-<div class="row">
+{{-- <div class="row">
     <div class="col-md-6">
         <div class="card-body" style="display: block;">
             <div class="chartjs-size-monitor">
@@ -246,7 +286,7 @@ float: right;
         </div>
     </div>
 
-</div>
+</div>  --}}
 <br>
 
 {{-- <div class="row">

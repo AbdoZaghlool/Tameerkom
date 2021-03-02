@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Permission;
 use App\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
@@ -47,7 +48,7 @@ class RoleController extends Controller
         $this->validate($request, $rules);
         $record = Role::create($request->only('name', 'display_name'));
         $record->permissions()->attach($request['permission_list']);
-        flash('تم اضافة الرتبة بنجاح');
+        flash('تم اضافة الرتبة بنجاح')->important();
         return redirect('/admin/roles');
     }
 
@@ -78,18 +79,14 @@ class RoleController extends Controller
             'name' => 'required',
             'permission_list' => 'required|array',
         ];
-        $validator = $this->validate($request, $rules);
-        if ($validator) {
-            $record = Role::findOrFail($id);
+        $this->validate($request, $rules);
 
-            $record->update($request->all());
-            $record->permissions()->sync($request->input('permission_list'));
-            $record->save();
-            flash('تم تعديل الرتبة بنجاح');
-            return redirect()->route('roles.index');
-        } else {
-            return $php_errormsg;
-        }
+        $record = Role::findOrFail($id);
+        $record->update($request->only('name', 'display_name'));
+        $record->permissions()->sync($request->input('permission_list'));
+
+        flash('تم تعديل الرتبة بنجاح')->important();
+        return redirect()->route('roles.index');
     }
 
     /**
@@ -101,10 +98,17 @@ class RoleController extends Controller
     public function destroy($id)
     {
         $record = Role::findOrFail($id);
-        if ($record->delete()) {
-            return redirect('/role');
+        if ($record->admins->count() > 0) {
+            flash('لا يمكن حذف الرتبة يوجد بها مشرفين')->error()->important();
+            return back();
+        }
+        $deleted = DB::delete('delete from roles where id = '.$id);
+        if ($deleted) {
+            flash('تم حذف الرتبة ')->warning()->important();
+            return back();
         } else {
-            return $php_errormsg;
+            flash('حدث خطأ ما برجاء المحالولة لاحقا')->error()->important();
+            return back();
         }
     }
 }

@@ -60,8 +60,8 @@ class AdminController extends Controller
         $role = Role::find($request->role_id);
         $admin->attachRole($role);
         $admin->attachPermissions($role->permissions()->pluck('id'));
-        
-        return redirect(url('/admin/admins'))->with('msg', 'تم الاضافه بنجاح');
+        flash('تم اضافة المشرف بنجاح')->important();
+        return redirect(url('/admin/admins'));
     }
 
     /**
@@ -106,7 +106,7 @@ class AdminController extends Controller
                 'image' => UploadImage($request->image, 'admin', 'uploads/admins')
             ]);
         }
-        flash('تم التعديل بنجاح');
+        flash('تم التعديل بنجاح')->important();
         return redirect(url('/admin/admins'));
     }
 
@@ -134,11 +134,13 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:admins,email,' . Auth::id(),
             'phone' => 'required',
         ]);
-        $data = Admin::where('id', Auth::id())->update(['name' => $request->name,
+        $data = Admin::where('id', Auth::id())->update([
+            'name'  => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
         ]);
-        return redirect(url('/admin/profile'))->with('msg', 'تم التعديل بنجاح');
+        flash('تم التعديل بنجاح')->important();
+        return redirect(url('/admin/profile'));
     }
 
     /**
@@ -165,7 +167,8 @@ class AdminController extends Controller
         $updated = Admin::where('id', Auth::id())->update([
             'password' => Hash::make($request->password),
         ]);
-        return redirect(url('/admin/profileChangePass'))->with('msg', 'تم التعديل بنجاح');
+        flash('تم التعديل بنجاح')->important();
+        return redirect(url('/admin/profileChangePass'));
     }
 
     /**
@@ -176,7 +179,9 @@ class AdminController extends Controller
      */
     public function admin_delete($id)
     {
-        Admin::where('id', $id)->delete();
-        return back()->with('msg', 'تم الحذف بنجاح');
+        $admin = Admin::findOrFail($id);
+        $admin->delete();
+        flash('تم الحذف بنجاح')->warning()->important();
+        return back();
     }
 }
