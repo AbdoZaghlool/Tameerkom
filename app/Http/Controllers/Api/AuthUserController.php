@@ -123,11 +123,12 @@ class AuthUserController extends Controller
             'password'              => 'required|string|min:6',
             'password_confirmation' => 'required|same:password',
             'device_token'          => 'required',
-            'latitude'              => 'required',
-            'longitude'             => 'required',
             'email'                 => 'sometimes|email|unique:users',
-            'commercial_record'     => 'sometimes|required_if:type,1',
-            'city_id'               => 'sometimes|required_if:type,1',
+            'latitude'              => 'sometimes',
+            'longitude'             => 'sometimes',
+            'commercial_record'     => 'required_if:type,1',
+            'commercial_image'      => 'required_if:type,1|mimes:jpeg,jpg,png|max:3000',
+            'city_id'               => 'required_if:type,1',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -145,6 +146,7 @@ class AuthUserController extends Controller
             'email'             => $request->email,
             'city_id'           => $request->city_id,
             'commercial_record' => $request->commercial_record,
+            'commercial_image'  => $request->commercial_image == null ? null : UploadImage($request->file('commercial_image'), 'commercial', '/uploads/commercial_images'),
             'image'             => $request->image == null ? null : UploadImage($request->file('image'), 'user', '/uploads/users'),
         ]);
         Auth::guard('api')->check(['phone_number' => $request->phone_number, 'password' => $request->password]);

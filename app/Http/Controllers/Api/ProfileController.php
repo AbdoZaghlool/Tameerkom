@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 use App;
+use App\Chat;
 use App\Contact;
 use App\Conversation;
 use App\Device;
+use App\Http\Resources\Chat as AppChat;
 use App\Setting;
 use Carbon\Carbon;
 
@@ -160,27 +162,14 @@ class ProfileController extends Controller
      */
     public function conversationMessages($id)
     {
-        $conversation = Conversation::with('chats')->find($id);
-        if (!$conversation) {
+        $messages = Chat::where('conversation_id', $id)->get();
+        if (!$messages->count() > 0) {
             $err = [
-                'key' => 'conversation',
-                'value' => 'لا يوجد محادثة بهذا الرقم'
+                'key' => 'messages',
+                'value' => 'لا يوجد رسائل'
             ];
             return ApiController::respondWithErrorArray($err);
         }
-        $arr = [];
-        foreach ($conversation->chats as $message) {
-            array_push($arr, [
-                'id'           => (int)$message->id,
-                'message'      => (string)$message->message,
-                'seen'         => (int)$message->seen,
-                'file'         => $message->file == null ? '' : asset('uploads/chats/'.$message->file),
-                'sender_id'    => (int)$message->user_id,
-                'sender_name'  => $message->user->name,
-                'sender_image' => asset('uploads/users/'.$message->user->image),
-                'created_at'   => $message->created_at == null ? '' : $message->created_at->format('Y-m-d H:i') ,
-            ]);
-        }
-        return ApiController::respondWithSuccess($arr);
+        return ApiController::respondWithSuccess(AppChat::collection($messages));
     }
 }

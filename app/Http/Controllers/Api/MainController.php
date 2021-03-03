@@ -207,6 +207,12 @@ class MainController extends Controller
         return ApiController::respondWithErrorArray($err);
     }
 
+    /**
+     * create new conversation between user and provider
+     *
+     * @param Request $request
+     * @return void
+     */
     public function createConversation(Request $request)
     {
         $rules = [
@@ -243,6 +249,12 @@ class MainController extends Controller
         }
 
         $room = Conversation::find($request->room_id);
+        // update last messages seen here.
+        $unseenMessages = $room->chats()->where('user_id', '!=', $request->user()->id)->where('seen', 0)->get();
+        if ($unseenMessages->count() > 0) {
+            $room->chats()->where('user_id', '!=', $request->user()->id)->where('seen', 0)->update(['seen'=>1]);
+        }
+        //end update seen.
         if ($room->user_id == $request->user()->id) {
             $room->update(['user_online'=>1]);
         } else {
@@ -303,10 +315,9 @@ class MainController extends Controller
             if ($room->user_online == 0) {
                 /* notifications*/
                 $devicesTokens = UserDevice::where('user_id', $room->user_id)
-                    ->get()
                     ->pluck('device_token')
                     ->toArray();
-                $title = 'الرسايل';
+                $title = 'رسائل الدردشة';
                 $message = $request->file == null ? $request->message : 'تم  ارسال مرفق';
                 if ($devicesTokens) {
                     sendMultiNotification($title, $request->user()->name." : ". $message, $devicesTokens);
@@ -316,28 +327,27 @@ class MainController extends Controller
             } else {
                 /* notifications*/
                 $devicesTokens = UserDevice::where('user_id', $room->provider_id)
-                    ->get()
                     ->pluck('device_token')
                     ->toArray();
-                $title = 'الرسايل';
+                $title = 'رسائل الدردشة';
                 $message = $request->file == null ? $request->message : 'تم  ارسال مرفق';
                 if ($devicesTokens) {
                     sendMultiNotification($title, $request->user()->name." : ". $message, $devicesTokens);
                 }
             }
-            $room->update(['seen'=>0]);
+            // $room->update(['seen'=>0]);
         }
         if ($request->file != null) {
             $chatMessage =  Chat::create([
                 'conversation_id' => $request->room_id,
-                'user_id'   => $request->user()->id,
-                'file' => $request->file,
+                'user_id'         => $request->user()->id,
+                'file'            => $request->file,
             ]);
         } else {
             $chatMessage =  Chat::create([
                 'conversation_id' => $request->room_id,
-                'user_id'   => $request->user()->id,
-                'message' => $request->message ?? 'message',
+                'user_id'         => $request->user()->id,
+                'message'         => $request->message ?? 'message',
             ]);
         }
         $data = [
@@ -345,9 +355,34 @@ class MainController extends Controller
             'conversation_id' => intval($chatMessage->conversation_id),
             'user_id'         => $chatMessage->user_id,
             'message'         => $chatMessage->message,
-            'file'            => $chatMessage->file,
+            'file'            => $chatMessage->file == null ? '' : asset('uploads/chats/'.$chatMessage->file),
             'created_at'      => $chatMessage->created_at->format('Y-m-d'),
         ];
         return response()->json(['mainCode'=> 1,'code' =>  200 , 'data'=>$data], 200);
+    }
+
+    /**
+     * upload chat files to application storage
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function uploadChatFiles(Request $request)
+    {
+        $rules = [
+            'conversation_id' => 'required|exists:conversations,id',
+            'file'            => 'required|max:10000',
+        ];
+        $validation = Validator::make($request->all(), $rules);
+        if ($validation->fails()) {
+            return ApiController::respondWithErrorObject(validateRules($validation->errors(), $rules));
+        }
+
+        $uploaded = UploadImage($request->file('file'), 'chat', '/uploads/chats');
+        if ($uploaded) {
+            return ApiController::respondWithSuccess($uploaded);
+        } else {
+            return ApiController::respondWithServerErrorArray();
+        }
     }
 }
