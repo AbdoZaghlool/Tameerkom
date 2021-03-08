@@ -47,7 +47,8 @@
 
                         <div class="col-lg-6">
                             <div class="btn-group">
-                                <a class="btn sbold green" href="{{route('users.create',['type'=> 1])}}"> إضافة جديد
+                                <a class="btn sbold green" href="{{ route('users.create', ['type' => 1]) }}"> إضافة
+                                    جديد
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -63,6 +64,7 @@
                             <th>رقم الهاتف</th>
                             <th>التفعيل</th>
                             <th>الحظر</th>
+                            <th>سبب الحظر</th>
                             <th>عدد المنتجات</th>
                             <th>عدد الطلبات</th>
 
@@ -70,16 +72,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i=0 ?>
-                        @foreach($users as $user)
+                        <?php $i = 0; ?>
+                        @foreach ($users as $user)
                         <tr class="odd gradeX">
-                            <td>{{$user->id}}</td>
-                            <td> {{$user->name}} </td>
+                            <td>{{ $user->id }}</td>
+                            <td> {{ $user->name }} </td>
 
-                            <td>{{$user->phone_number}} </td>
+                            <td>{{ $user->phone_number }} </td>
 
                             <td>
-                                @if($user->active == 0)
+                                @if ($user->active == 0)
                                 <button type="button" class="btn btn-circle red btn-sm">غير مفعل</button>
                                 @else
                                 <button type="button" class="btn btn-circle blue btn-sm"> مفعل</button>
@@ -87,15 +89,28 @@
                             </td>
 
                             <td>
-                                @if($user->blocked == 1)
+                                @if ($user->blocked == 1)
                                 <button type="button" class="btn btn-circle red btn-sm">محظور</button>
                                 @else
                                 <button type="button" class="btn btn-circle blue btn-sm"> غير محظور</button>
                                 @endif
                             </td>
 
-                            <td>{{$user->products->count()}} </td>
-                            <td>{{$user->providerOrders->count()}} </td>
+                            <td>
+                                @if ($user->blocked == 1)
+                                @if ($user
+                                ->providerOrders()
+                                ->where('status', '0')
+                                ->count() >= \App\Setting::pluck('active_orders_count')->first())
+                                تخطي الطلبات النشطة
+                                @else
+                                عدم دفع العمولات
+                                @endif
+                                @endif
+                            </td>
+
+                            <td>{{ $user->products->count() }} </td>
+                            <td>{{ $user->providerOrders->count() }} </td>
 
                             <td>
                                 <div class="btn-group">
@@ -104,7 +119,7 @@
                                     </button>
                                     <ul class="dropdown-menu pull-left" role="menu">
                                         <li>
-                                            <a href="{{route('users.edit',['id' => $user->id])}}">
+                                            <a href="{{ route('users.edit', ['id' => $user->id]) }}">
                                                 <i class="icon-docs"></i> تعديل </a>
                                         </li>
 

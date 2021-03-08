@@ -92,6 +92,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
         /*provider orders*/
         Route::get('/provider-orders', [PartnerController::class, 'myOrders']);
+        Route::get('/provider-commissions', [PartnerController::class, 'myCommissions']);
         Route::post('upload-payment-image', [PartnerController::class, 'uploadImage']);
 
         /** chat section */

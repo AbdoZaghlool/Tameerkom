@@ -71,21 +71,23 @@ class UserController extends Controller
             'latitude'              => 'required',
             'longitude'             => 'required',
             'commercial_record'     => 'required_if:type,1',
+            'commercial_image'      => 'nullable|mimes:jpeg,bmp,png,jpg|max:3000',
         ];
         $this->validate($request, $rules);
 
         $user = User::create([
-            'phone_number' => $request->phone_number,
-            'name' => $request->name,
-            'type' => $type,
-            'active' => $request->active ?? 0,
-            'password' => Hash::make($request->password),
-            'image' => $request->image == null ? 'default.png' :UploadImage($request->file('image'), 'user', '/uploads/users'),
-            'email' => $request->email,
-            'city_id' => $request->city_id,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+            'phone_number'      => $request->phone_number,
+            'name'              => $request->name,
+            'type'              => $type,
+            'active'            => $request->active ?? 0,
+            'password'          => Hash::make($request->password),
+            'image'             => $request->image == null ? 'default.png' :UploadImage($request->file('image'), 'user', '/uploads/users'),
+            'email'             => $request->email,
+            'city_id'           => $request->city_id,
+            'latitude'          => $request->latitude,
+            'longitude'         => $request->longitude,
             'commercial_record' => $request->commercial_record,
+            'commercial_image'  => $request->file('commercial_image') == null ? null : UploadImage($request->file('commercial_image'), 'commercial', '/uploads/commercial_images'),
         ]);
 
         flash('تم اضافة المستخدم بنجاح')->success()->important();
@@ -134,6 +136,7 @@ class UserController extends Controller
             'latitude'          => 'required',
             'longitude'         => 'required',
             'commercial_record' => 'required_if:type,1',
+            'commercial_image'  => 'nullable|mimes:jpeg,bmp,png,jpg|max:3000',
         ];
 
         $this->validate($request, $rules);
@@ -145,11 +148,12 @@ class UserController extends Controller
             'active'            => $request->active,
             'password'          => $request->password == null ? $user->password : Hash::make($request->password),
             'email'             => $request->email,
-            'image'             => $request->file('image') == null ? $user->image : UploadImage($request->file('image'), 'image', '/uploads/users'),
             'city_id'           => $request->city_id,
             'latitude'          => $request->latitude,
             'longitude'         => $request->longitude,
             'commercial_record' => $request->commercial_record,
+            'image'             => $request->file('image') == null ? $user->image : UploadImage($request->file('image'), 'image', '/uploads/users'),
+            'commercial_image' => $request->file('commercial_image') == null ? $user->commercial_image : UploadImage($request->file('commercial_image'), 'commercial', '/uploads/commercial_images'),
         ]);
 
         flash()->success('تم تعديل بيانات المستخدم')->important();
@@ -206,9 +210,13 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $image = $user->image;
+        $commercialImage = $user->commercial_image;
         $user->delete();
         if (file_exists(public_path('uploads/users/') . $image) && $image != 'default.png') {
             unlink(public_path('uploads/users/') . $image);
+        }
+        if ($commercialImage != null && file_exists(public_path('uploads/commercial_images/') . $commercialImage)) {
+            unlink(public_path('uploads/commercial_images/') . $commercialImage);
         }
         flash('تم الحذف بنجاح')->warning()->important();
         return back();

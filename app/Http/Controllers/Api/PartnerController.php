@@ -78,7 +78,7 @@ class PartnerController extends Controller
 
     /**
      * get family orders depends on status
-     *  0 => active, 2 => done, 3 => canceled
+     *  0 => active, 1 => done, 2 => canceled
      *
      * @param Integer $status
      * @return void
@@ -86,6 +86,26 @@ class PartnerController extends Controller
     public function myOrders()
     {
         $orders = $this->family->providerOrders()->latest()->get();
+        if ($orders->count() == 0) {
+            $err = [
+                'key' => 'orders',
+                'value'=> 'لا يوجد طلبات حاليا'
+            ];
+            return ApiController::respondWithErrorArray($err);
+        }
+        return ApiController::respondWithSuccess(OrderResource::collection($orders));
+    }
+
+    /**
+     * get family commissions
+     *
+     *
+     * @param Integer $status
+     * @return void
+     */
+    public function myCommissions()
+    {
+        $orders = $this->family->providerOrders()->where('status', '1')->latest()->get();
         if ($orders->count() == 0) {
             $err = [
                 'key' => 'orders',

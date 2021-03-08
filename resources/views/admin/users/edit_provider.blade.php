@@ -152,26 +152,52 @@
                                             @enderror
                                         </div>
 
-                                        {{-- <!-- image -->  --}}
-                                        <div class="form-body">
-                                            <div class="form-group {{$errors->has('image')?'has-error':''}} ">
-                                                <label class="control-label col-md-3">الصورة الشخصية</label>
-                                                <div class="col-md-9">
-                                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
-                                                            <img src="{{asset('uploads/users/'.$user->image)}}" style="width: 100%">
+                                        <div class="row">
+                                            {{-- <!-- commercial_image -->  --}}
+                                            <div class="form-body col-md-6">
+                                                <div class="form-group {{$errors->has('commercial_image')?'has-error':''}} ">
+                                                    <label class="control-label col-md-3">صورة السجل التجاري</label>
+                                                    <div class="col-md-9">
+                                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                            <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                                                <img src="{{asset('/uploads/commercial_images/'.$user->commercial_image)}}" style="width: 100%">
+                                                            </div>
+                                                            <div>
+                                                                <span class="btn red btn-outline btn-file">
+                                                                    <span class="fileinput-new"> اختر الصورة </span>
+                                                                    <span class="fileinput-exists"> تغيير </span>
+                                                                    <input type="file" name="commercial_image"> </span>
+                                                                <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <span class="btn red btn-outline btn-file">
-                                                                <span class="fileinput-new"> اختر الصورة </span>
-                                                                <span class="fileinput-exists"> تغيير </span>
-                                                                <input type="file" name="image"> </span>
-                                                            <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
-                                                        </div>
+                                                        @error('commercial_image')
+                                                        <span class="status-error">{{ $errors->first('commercial_image') }}</span>
+                                                        @enderror
                                                     </div>
-                                                    @error('image')
-                                                    <span class="status-error">{{ $errors->first('image') }}</span>
-                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            {{-- <!-- image -->  --}}
+                                            <div class="form-body col-md-6">
+                                                <div class="form-group {{$errors->has('image')?'has-error':''}} ">
+                                                    <label class="control-label col-md-3">الصورة الشخصية</label>
+                                                    <div class="col-md-9">
+                                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                            <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                                                <img src="{{asset('uploads/users/'.$user->image)}}" style="width: 100%">
+                                                            </div>
+                                                            <div>
+                                                                <span class="btn red btn-outline btn-file">
+                                                                    <span class="fileinput-new"> اختر الصورة </span>
+                                                                    <span class="fileinput-exists"> تغيير </span>
+                                                                    <input type="file" name="image"> </span>
+                                                                <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
+                                                            </div>
+                                                        </div>
+                                                        @error('image')
+                                                        <span class="status-error">{{ $errors->first('image') }}</span>
+                                                        @enderror
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -322,11 +348,19 @@
     var map;
 
     function initMap() {
-        var latitude = {{$user -> latitude ?? 24.482582269844997}}; // YOUR LATITUDE VALUE
-        var longitude = {{$user -> longitude ?? 39.567722188865126}}; // YOUR LONGITUDE VALUE
+        var latitude = {
+            {
+                $user - > latitude ? ? 24.482582269844997
+            }
+        }; // YOUR LATITUDE VALUE
+        var longitude = {
+            {
+                $user - > longitude ? ? 39.567722188865126
+            }
+        }; // YOUR LONGITUDE VALUE
         var myLatLng = {
-            lat: latitude, 
-            lng: longitude
+            lat: latitude
+            , lng: longitude
         };
         map = new google.maps.Map(document.getElementById('map'), {
             center: myLatLng
