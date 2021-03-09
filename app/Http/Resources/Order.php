@@ -25,7 +25,7 @@ class Order extends JsonResource
             'user_name'      => $this->user->name ,
             'user_phone'     => $this->user->phone_number ,
             'price'          => (double)$this->price,
-            'tax'            => (double)$this->tax,
+            'tax'            => (int)ceil($this->tax),
             'status'         => (string)$this->getStatus(),
             'payment_image'  => $this->payment_image == null ? '' : asset('uploads/payment_images/'.$this->payment_image),
             'payment_status' => (int)$this->payment_status,
