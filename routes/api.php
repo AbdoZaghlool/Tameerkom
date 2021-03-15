@@ -35,10 +35,11 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::get('/regions', [MainController::class, 'regions']);
     Route::get('/cities/{region_id?}', [MainController::class, 'cities']);
     Route::get('/categories/{category_id?}', [MainController::class, 'mainCat']);
+    Route::get('/properties/{category_id?}', [MainController::class, 'properties']);
 
     Route::post('upload-chat-file', [MainController::class, 'uploadChatFiles']);
 
-    Route::get('/about-us', [ProfileController::class, 'about_us'])->name('about_us');
+    Route::get('/about-us', [ProfileController::class, 'about_us']);
     Route::get('/terms-and-conditions', [ProfileController::class, 'terms_and_conditions'])->name('terms_and_conditions');
     Route::get('/settings', [ProfileController::class, 'settings'])->name('settings');
     Route::post('/search', [MainController::class, 'search']);

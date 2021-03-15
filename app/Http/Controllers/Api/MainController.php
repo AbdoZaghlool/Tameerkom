@@ -12,6 +12,7 @@ use App\Http\Resources\Provider as ProviderResource;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Product as ProductResource;
 use App\Product;
+use App\Property;
 use App\Region;
 use App\Slider;
 use App\User;
@@ -131,7 +132,27 @@ class MainController extends Controller
         }
         return ApiController::respondWithSuccess($data);
     }
-
+    
+    public function properties($cat_id = null)
+    {
+        $properties = Property::with('values')->filter($cat_id)->get();
+        if ($properties->count() == 0) {
+            $err = [
+                'key' => 'properties',
+                'value' => 'لا توجد بيانات حاليا',
+            ];
+            return ApiController::respondWithErrorObject(array($err));
+        }
+        $res = [];
+        foreach ($properties as $property) {
+            array_push($res, [
+                'id' => $property->id,
+                'name' => $property->name,
+                'values' =>$property->values()->pluck('name', 'id')
+            ]);
+        }
+        return ApiController::respondWithSuccess($res);
+    }
 
     /**
      * get the whole main category in our app
