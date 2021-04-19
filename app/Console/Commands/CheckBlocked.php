@@ -44,7 +44,6 @@ class CheckBlocked extends Command
      */
     public function handle()
     {
-
         // get application limited values.
         $unpaidCommissions = (int) Setting::pluck('unpaid_commissions')->first() ?? 5;
         $activeOrders = (int) Setting::pluck('active_orders_count')->first() ?? 5;

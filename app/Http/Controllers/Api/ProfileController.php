@@ -96,6 +96,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         $data = $user->histories()->orderBy('created_at', 'DESC')->get();
+        // dd($data);
         if ($data->count() == 0) {
             $arr = [
                 'key' => 'histories',
@@ -138,14 +139,16 @@ class ProfileController extends Controller
 
         $arr = [];
         foreach ($data as $conversation) {
-            $lastMessage = $conversation->chats()->first();
+            $lastMessage = $conversation->chats()->where('message','!=',null)->latest()->first();
             array_push($arr, [
                 'id'             => $conversation->id,
                 'user_id'        => $conversation->user_id,
                 'user_name'      => $conversation->user->name,
+                'user_phone'      => $conversation->user->phone_number,
                 'user_image'     => asset('uploads/users/'.$conversation->user->image),
                 'provider_id'    => $conversation->provider_id,
                 'provider_name'  => $conversation->provider->name,
+                'provider_phone'  => $conversation->provider->phone_number,
                 'provider_image' => asset('uploads/users/'.$conversation->provider->image),
                 'last_message'   => $lastMessage == null ? '' : $lastMessage->message,
                 'created_at'     => $conversation->created_at == null ? '' : $conversation->created_at->format('Y-m-d H:i') ,

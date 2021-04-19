@@ -456,7 +456,9 @@ class AuthUserController extends Controller
             'commercial_record' => 'sometimes',
             'latitude'          => 'sometimes',
             'longitude'         => 'sometimes',
+            'city_id'           => 'sometimes|exists:cities,id',
             'image'             => 'sometimes|mimes:jpeg,bmp,png,jpg|max:5000',
+            'commercial_image'             => 'sometimes|mimes:jpeg,bmp,png,jpg|max:5000',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -466,11 +468,13 @@ class AuthUserController extends Controller
         $oldImage = $user->image;
         $updated = $user->update([
             'name'              => $request->name ?? $user->name ,
-            'commercial_record' => $request->commercial_record ?? $user->commercial_record,
             'email'             => $request->email ?? $user->email,
+            'city_id'           => $request->city_id ?? $user->city_id,
+            'commercial_record' => $request->commercial_record ?? $user->commercial_record,
             'latitude'          => $request->latitude ?? $user->latitude,
             'longitude'         => $request->longitude ?? $user->longitude,
             'image'             => $request->image == null ? $user->image : UploadImageEdit($request->file('image'), 'user', '/uploads/users', $oldImage),
+            'commercial_image'  => $request->commercial_image == null ? $user->commercial_image : UploadImageEdit($request->file('commercial_image'), 'commercial', '/uploads/commercial_images', $user->commercial_image),
         ]);
 
         return $updated

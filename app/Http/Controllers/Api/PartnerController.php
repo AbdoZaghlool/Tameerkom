@@ -52,9 +52,9 @@ class PartnerController extends Controller
             'email'            => 'sometimes|email|unique:users,email,' . $this->family->id,
             'region_id'        => 'sometimes|exists:regions,id',
             'city_id'          => 'sometimes|exists:cities,id',
+            'tax_number'       => 'sometimes',
             'latitude'         => 'sometimes',
             'longitude'        => 'sometimes',
-            'tax_number'       => 'sometimes',
         ];
         $validation = Validator::make($request->all(), $rules);
         if ($validation->fails()) {

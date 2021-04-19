@@ -68,8 +68,8 @@ class UserController extends Controller
             'password_confirmation' => 'required|same:password',
             'active'                => 'nullable',
             'city_id'               => 'required_if:type,1',
-            'latitude'              => 'required',
-            'longitude'             => 'required',
+            'latitude'              => 'nullable',
+            'longitude'             => 'nullable',
             'commercial_record'     => 'required_if:type,1',
             'commercial_image'      => 'nullable|mimes:jpeg,bmp,png,jpg|max:3000',
         ];
@@ -133,8 +133,8 @@ class UserController extends Controller
             'active'            => 'nullable',
             'email'             => 'nullable|email|unique:users,email,' . $id,
             'city_id'           => 'required_if:type,1',
-            'latitude'          => 'required',
-            'longitude'         => 'required',
+            'latitude'          => 'nullable',
+            'longitude'         => 'nullable',
             'commercial_record' => 'required_if:type,1',
             'commercial_image'  => 'nullable|mimes:jpeg,bmp,png,jpg|max:3000',
         ];

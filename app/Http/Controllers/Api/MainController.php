@@ -36,6 +36,26 @@ class MainController extends Controller
         }
         return ApiController::respondWithServerErrorArray();
     }
+  
+    public function uploadOnStore()
+    {
+        return ApiController::respondWithSuccess(1);
+    }
+    
+    /**
+     * get product by id
+     *
+     * @param int $id
+     * @return void
+     */
+    public function productById($id)
+    {
+        $product = Product::find($id);
+        if ($product) {
+            return ApiController::respondWithSuccess(new ProductResource($product));
+        }
+        return ApiController::respondWithServerErrorArray();
+    }
 
     /**
      * get application splashs images
@@ -132,27 +152,7 @@ class MainController extends Controller
         }
         return ApiController::respondWithSuccess($data);
     }
-    
-    public function properties($cat_id = null)
-    {
-        $properties = Property::with('values')->filter($cat_id)->get();
-        if ($properties->count() == 0) {
-            $err = [
-                'key' => 'properties',
-                'value' => 'لا توجد بيانات حاليا',
-            ];
-            return ApiController::respondWithErrorObject(array($err));
-        }
-        $res = [];
-        foreach ($properties as $property) {
-            array_push($res, [
-                'id' => $property->id,
-                'name' => $property->name,
-                'values' =>$property->values()->pluck('name', 'id')
-            ]);
-        }
-        return ApiController::respondWithSuccess($res);
-    }
+
 
     /**
      * get the whole main category in our app
@@ -174,6 +174,27 @@ class MainController extends Controller
 
         $request['user_id'] = $user_id;
         return ApiController::respondWithSuccess(CategoryResource::collection($categories));
+    }
+    
+    public function properties($cat_id = null)
+    {
+        $properties = Property::with('values')->filter($cat_id)->get();
+        if ($properties->count() == 0) {
+            $err = [
+                'key' => 'properties',
+                'value' => 'لا توجد بيانات حاليا',
+            ];
+            return ApiController::respondWithErrorObject(array($err));
+        }
+        $res = [];
+        foreach ($properties as $property) {
+            array_push($res, [
+                'id' => $property->id,
+                'name' => $property->name,
+                'values' =>$property->values()->pluck('name', 'id')
+            ]);
+        }
+        return ApiController::respondWithSuccess($res);
     }
 
     /**
@@ -316,7 +337,7 @@ class MainController extends Controller
     {
         $rules = [
             'room_id'  => 'required|exists:conversations,id',
-            'message'  => 'required',
+            'message'  => 'sometimes',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {

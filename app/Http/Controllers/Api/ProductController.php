@@ -65,7 +65,7 @@ class ProductController extends Controller
             'details'              => 'nullable',
             'price'                => 'required|numeric',
             'category_id'          => 'required|exists:categories,id',
-            'property_value_id'    => 'required|array',
+            'property_value_id'    => 'required_if:category_id,1,2,3|array',
             'image'                => 'required',
             'image.*'              => 'mimes:jpeg,bmp,png,jpg|max:2048',
         ];

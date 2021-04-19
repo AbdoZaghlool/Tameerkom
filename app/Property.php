@@ -19,7 +19,7 @@ class Property extends Model
     {
         return $this->hasMany(PropertyValue::class);
     }
-
+    
     /**
      * filter the model by name, take the sub cat or not
      *

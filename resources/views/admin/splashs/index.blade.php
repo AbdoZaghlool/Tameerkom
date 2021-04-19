@@ -71,7 +71,7 @@
                             </td>
                             <td>
                                 @if ($page->product_id)
-                                <a href="{{route('products.edit',$page->product->id)}}">{{$page->product->name}}</a>
+                               {{$page->product->name}}
                                 @endif
                             </td>
                             <td>{{$page->link}}</td>

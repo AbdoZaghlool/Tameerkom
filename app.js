@@ -33,8 +33,6 @@ const PORT = 1900;
 // to use axios
 const axios = require('axios');
 
-// default home directory;
-// app.use('/chat', (req, res, next) => res.send('<h1>Hello, World!</h1>'));
 
 // users list
 var users = [];
@@ -43,7 +41,7 @@ var users = [];
 server.listen(PORT, () => console.log('Server started on port : ' + PORT));
 
 io.on('connection', function(socket) {
-    console.log('لا حول والا قوة الا بالله  العلي  العظيم');
+    console.log('connected');
 
     let userConnected = function(data) {
         var config = {

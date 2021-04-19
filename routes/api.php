@@ -28,7 +28,9 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
 
 
+    Route::get('/upload-on-store', [MainController::class, 'uploadOnStore']);
     Route::get('/user/{id}', [MainController::class, 'userById']);
+    Route::get('/product/{id}', [MainController::class, 'productById']);
     Route::post('/user-type', [MainController::class, 'userType']);
 
     Route::get('/splashs', [MainController::class, 'splashs']);
@@ -39,7 +41,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
     Route::post('upload-chat-file', [MainController::class, 'uploadChatFiles']);
 
-    Route::get('/about-us', [ProfileController::class, 'about_us']);
+    Route::get('/about-us', [ProfileController::class, 'about_us'])->name('about_us');
     Route::get('/terms-and-conditions', [ProfileController::class, 'terms_and_conditions'])->name('terms_and_conditions');
     Route::get('/settings', [ProfileController::class, 'settings'])->name('settings');
     Route::post('/search', [MainController::class, 'search']);

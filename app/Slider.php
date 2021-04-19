@@ -9,12 +9,12 @@ class Slider extends Model
     protected $fillable = [
         'link',
         'image',
-        'provider_id',
+        'product_id',
     ];
 
 
-    public function family()
+    public function product()
     {
-        return $this->belongsTo(User::class, 'provider_id');
+        return $this->belongsTo(Product::class);
     }
 }

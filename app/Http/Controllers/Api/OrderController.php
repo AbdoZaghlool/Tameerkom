@@ -45,7 +45,7 @@ class OrderController extends Controller
             'product_id' => 'required|exists:products,id',
             'count' => 'required',
             'price' => 'required',
-            'property_values' => 'required|array',
+            'property_values' => 'sometimes|array',
             'recieve_place' => 'required',
             'notes' => 'sometimes',
         ];
