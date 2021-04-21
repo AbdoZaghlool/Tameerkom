@@ -92,6 +92,15 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ strpos(URL::current(), 'admin/products') !== false ? 'active' : '' }}">
+                <a href="{{ route('products.index')}}" class="nav-link ">
+                    <i class="fa fa-sitemap" style="color: aqua;"></i>
+                    <span class="title">المنتجات</span>
+                    <span class="pull-right-container"></span>
+                    <span class="badge badge-success">{!! count(\App\Category::get()) !!}</span>
+                </a>
+            </li>
+
             <li class="nav-item {{ strpos(URL::current(), 'admin/properties') !== false ? 'active' : '' }}">
                 <a href="{{ route('properties.index')}}" class="nav-link ">
                     <i class="fa fa-sitemap" style="color: aqua;"></i>

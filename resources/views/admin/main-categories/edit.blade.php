@@ -57,7 +57,8 @@
 
                                     <div class="form-group">
                                         <label class="control-label"> اسم القسم </label>
-                                        <input type="text" name="name" class="form-control" placeholder="أسم القسم" value="{{$category->name}}" />
+                                        <input type="text" name="name" class="form-control" placeholder="أسم القسم"
+                                            value="{{$category->name}}" />
                                         @if ($errors->has('name'))
                                         <span class="help-block">
                                             <strong style="color: red;">{{ $errors->first('name') }}</strong>
@@ -68,18 +69,21 @@
                                     {{-- <!-- image -->  --}}
                                     <div class="form-body">
                                         <div class="form-group {{$errors->has('image')?'has-error':''}} ">
-                                            <label class="control-label col-md-3">الصورة الشخصية</label>
+                                            <label class="control-label col-md-3">الصورة</label>
                                             <div class="col-md-9">
                                                 <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
-                                                        <img src="{{asset('uploads/categories/'.$category->image)}}" style="width: 100%">
+                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                                        style="width: 200px; height: 150px;">
+                                                        <img src="{{asset('uploads/categories/'.$category->image)}}"
+                                                            style="width: 100%">
                                                     </div>
                                                     <div>
                                                         <span class="btn red btn-outline btn-file">
                                                             <span class="fileinput-new"> اختر الصورة </span>
                                                             <span class="fileinput-exists"> تغيير </span>
                                                             <input type="file" name="image"> </span>
-                                                        <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
+                                                        <a href="javascript:;" class="btn red fileinput-exists"
+                                                            data-dismiss="fileinput"> إزالة </a>
                                                     </div>
                                                 </div>
                                                 @error('image')
@@ -94,7 +98,8 @@
                         </div>
                         <div class="margiv-top-10">
                             <div class="form-actions">
-                                <button type="submit" class="btn green" value="" onclick="this.disabled=true;this.value='تم الارسال, انتظر...';this.form.submit();">تعديل</button>
+                                <button type="submit" class="btn green" value=""
+                                    onclick="this.disabled=true;this.value='تم الارسال, انتظر...';this.form.submit();">تعديل</button>
                             </div>
                         </div>
                         </form>

@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-البنرات
+المنتجات
 @endsection
 
 @section('styles')
@@ -11,6 +11,7 @@
 @endsection
 
 @section('page_header')
+{{-- bread crumb section  --}}
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
@@ -18,17 +19,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="{{ url('admin/splashs') }}">البنرات</a>
+            <a href="{{ url('admin/products') }}">المنتجات</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>عرض البنرات</span>
+            <span>عرض المنتجات</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title"> البنرات
-    {{--<small>عرض جميع الاقسام</small>--}}
+<h1 class="page-title"> المنتجات
+    {{--<small>عرض جميع المنتجات</small>--}}
 </h1>
 @include('flash::message')
 @endsection
@@ -43,7 +44,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="btn-group">
-                                <a class="btn sbold green" href="{{ route('splashs.create') }}"> إضافة جديد
+                                <a class="btn sbold green" href="{{ route('products.create') }}"> إضافة جديد
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -51,42 +52,40 @@
 
                     </div>
                 </div>
-
                 <table class="table table-striped table-bordered table-hover table-checkable order-column"
                     id="sample_1">
                     <thead>
                         <tr>
-                            <th>رقم البانر</th>
-                            <th>الصورة</th>
-                            <th>المنتج</th>
+                            <th>ID</th>
+                            <th> أسم المنتج </th>
+                            <th>تفاصيل المنتج</th>
+                            <th>سعر المنتج</th>
+                            <th>القسم</th>
                             <th>المزود</th>
-                            <th>الرابط</th>
                             <th> العمليات </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($splashs as $page)
+
+                        @foreach( $products as $product )
                         <tr class="odd gradeX">
-                            <td>{{$page->id}}</td>
+                            <td>{{$product->id}}</td>
+                            <td class="no_dec">{{ $product->name }}</td>
+                            <td class="no_dec">{{ $product->details }}</td>
+                            <td class="no_dec">{{ $product->price }}</td>
+
                             <td class="no_dec">
-                                <img src="{{asset('uploads/sliders/'.$page->image)}}"
-                                    style="height: 50px; width: 100px;">
-                            </td>
-                            <td>
-                                @if ($page->product_id)
-                                <a href="{{route('products.index')}}">
-                                    {{$page->product->name}}
+                                <a href="{{route('main-categories.edit',$product->category->id)}}">
+                                    {{ $product->category->name }}
                                 </a>
-                                @endif
                             </td>
-                            <td>
-                                @if ($page->provider_id)
-                                <a href="{{route('users.edit',$page->provider->id)}}">
-                                    {{$page->provider->name}}
+
+                            <td class="no_dec">
+                                <a href="{{route('users.edit',$product->provider->id)}}">
+                                    {{ $product->provider->name }}
                                 </a>
-                                @endif
                             </td>
-                            <td>{{$page->link}}</td>
+
                             <td>
                                 <div class="btn-group">
                                     <button class="btn btn-xs green dropdown-toggle" type="button"
@@ -96,21 +95,20 @@
                                     <ul class="dropdown-menu pull-left" role="menu">
 
                                         <li>
-                                            <a href="{{ url('/admin/splashs/'. $page->id.'/edit') }}">
+                                            <a href="{{ route('products.edit',['id'=>$product->id]) }}">
                                                 <i class="icon-pencil"></i> تعديل
                                             </a>
                                         </li>
-                                        @if( $page->id > 1 )
+                                        @if ($product->id > 3)
                                         <li>
-                                            <a class="delete_data" data="{{ $page->id }}"
-                                                data_name="{{ $page->title }}">
+                                            <a class="delete_data" data="{{ $product->id }}"
+                                                data_name="{{ $product->name }}">
                                                 <i class="fa fa-times"></i> حذف
                                             </a>
                                         </li>
                                         @endif
                                     </ul>
                                 </div>
-                                {{--@endif--}}
                             </td>
                         </tr>
                         @endforeach
@@ -153,6 +151,7 @@
     $(document).ready(function() {
         $('body').on('click', '.delete_data', function() {
             var id = $(this).attr('data');
+            // console.log(id);
             var swal_text = 'حذف ' + $(this).attr('data_name');
             var swal_title = 'هل أنت متأكد من الحذف ؟';
 
@@ -166,7 +165,7 @@
                 , cancelButtonText: "إغلاق"
             }, function() {
 
-                window.location.href = "{{ url('/') }}" + "/admin/splashs/" + id + "/delete";
+                window.location.href = "{{ url('/') }}" + "/admin/products/" + id + "/delete";
 
             });
 

@@ -77,6 +77,7 @@ class MainController extends Controller
             array_push($arr, [
                 'id'          => (int) $slider->id,
                 'product_id'  => (int) $slider->product_id,
+                'provider_id'  => (int) $slider->provider_id,
                 'link'        => (string) $slider->link,
                 'image'       => asset('uploads/sliders/' . $slider->image),
             ]);

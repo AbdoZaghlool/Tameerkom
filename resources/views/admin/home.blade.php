@@ -138,7 +138,7 @@ float: right;
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light red" href="{{route('providers.index')}}">
+        <a class="dashboard-stat dashboard-stat-light red" href="{{route('products.index')}}">
             <div class="visual">
                 <i class="fa fa-cutlery" aria-hidden="true"></i>
             </div>
@@ -146,7 +146,7 @@ float: right;
                 <div class="number">
                     <span>{{App\Product::count()}}</span>
                 </div>
-                <div class="desc"> عدد المنتجات </div>
+                <div class="desc">المنتجات</div>
             </div>
         </a>
     </div>

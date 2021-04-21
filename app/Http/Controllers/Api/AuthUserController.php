@@ -192,7 +192,7 @@ class AuthUserController extends Controller
             if (Auth::user()->active == 0) {
                 $errors = [
                     'key' => 'message',
-                    'value' => trans('messages.Sorry_your_membership_was_stopped_by_Management'),
+                    'value' => 'عميلنا العزيز شكرا لاستخدامكم تطبيق تعميركم. برجاء الانتظار لحين تفعيل عضويتك من قبل الادارة',
                 ];
                 return ApiController::respondWithErrorArray($errors);
             }

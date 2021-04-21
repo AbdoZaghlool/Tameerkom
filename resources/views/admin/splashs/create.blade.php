@@ -67,7 +67,8 @@
 
                                         <div class="form-group">
                                             <label for="link" class="control-label">اللينك</label>
-                                            <input type="text" name="link" id="link" class="form-control" value="{{old('link')}}">
+                                            <input type="text" name="link" id="link" class="form-control"
+                                                value="{{old('link')}}">
                                             @error('link')
                                             <span class="help-block">
                                                 <strong style="color: red;">{{ $errors->first('link') }}</strong>
@@ -86,19 +87,34 @@
                                             </span>
                                             @endif
                                         </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">المزودين </label>
+                                            {!! Form::select('provider_id',
+                                            App\User::where('type','1')->pluck('name','id'),
+                                            null, ['class' => 'form-control','placeholder'=> 'اختر قيمة']) !!}
+                                            @if ($errors->has('provider_id'))
+                                            <span class="help-block">
+                                                <strong style="color: red;">{{ $errors->first('provider_id') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+
                                         <hr>
                                         <div class="form-group ">
                                             <label class="control-label col-md-3">الصورة </label>
                                             <div class="col-md-9">
                                                 <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; ">
+                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                                        style="width: 200px; height: 150px; ">
                                                     </div>
                                                     <div>
                                                         <span class="btn red btn-outline btn-file">
                                                             <span class="fileinput-new"> اختر الصورة </span>
                                                             <span class="fileinput-exists"> تغيير </span>
                                                             <input type="file" name="image"> </span>
-                                                        <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> إزالة </a>
+                                                        <a href="javascript:;" class="btn red fileinput-exists"
+                                                            data-dismiss="fileinput"> إزالة </a>
                                                     </div>
                                                 </div>
                                                 @if ($errors->has('image'))

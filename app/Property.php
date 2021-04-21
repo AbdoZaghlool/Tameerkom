@@ -19,7 +19,12 @@ class Property extends Model
     {
         return $this->hasMany(PropertyValue::class);
     }
-    
+
+    public function valuess()
+    {
+        return $this->hasMany(PropertyValue::class)->select(['id', 'name']);
+    }
+
     /**
      * filter the model by name, take the sub cat or not
      *
