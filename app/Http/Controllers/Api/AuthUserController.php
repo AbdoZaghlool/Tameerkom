@@ -119,7 +119,7 @@ class AuthUserController extends Controller
             'type'                  => 'required|in:0,1',
             'phone_number'          => 'required|unique:users|starts_with:05|digits:10',
             'name'                  => 'required|max:255',
-            'image'                 => 'required_if:type,1|mimes:jpeg,bmp,png,jpg|max:3000',
+            'image'                 => 'sometimes|mimes:jpeg,bmp,png,jpg|max:3000',
             'password'              => 'required|string|min:6',
             'password_confirmation' => 'required|same:password',
             'device_token'          => 'required',

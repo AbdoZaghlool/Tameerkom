@@ -65,109 +65,51 @@
             </div>
             <div class="portlet-body">
 
-                <!-- 
-                    <table class="table table-striped table-bordered table-hover table-checkable order-column"
-                        id="sample_1">
-                        <thead>
-                            <tr>
-                                <th> رقم الطلب</th>
-                                <th> المزودينة</th>
-                                <th> العميل </th>
-                                <th> السائق </th>
-                                <th> حالة الطلب </th>
-                                <th> وقت التسليم </th>
-                                <th> السعر(ريال) </th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <?php $i=0 ?>
-                            <tr class="odd gradeX">
-                                <td>{{$order->id}}</td>
-                                <td>{{$order->provider->name}}</td>
-                                <td>{{$order->user->name}}</td>
-                                <td>{{$order->driver_id == null ? ($order->delivery_type ?? 'لم يحدد بعد' ) : $order->driver->name }}</td>
-                                <td>
-                                    @if($order->status == '0')
-                                    <button type="button" class="btn btn-circle green btn-sm">جديد</button>
-                                    @elseif($order->status == '1')
-                                    <button type="button" class="btn btn-circle purple btn-sm">مقبول</button>
-                                    @elseif($order->status == '2')
-                                    <button type="button" class="btn btn-circle purple btn-sm">نشط</button>
-                                    @elseif($order->status == '3')
-                                    <button type="button" class="btn btn-circle purple btn-sm">مكتمل</button>
-                                    @endif
-                                </td>
-                                <td> {{$order->recieve_at ?? '' }} </td>
-                                <td> {{ convertArabicNumbersToEnglish($order->price) }} </td>
-                                
-                            </tr>
-                        </tbody>
-
-                    </table>
-                -->
-
-
-                @php
-                $orderItems = unserialize($order->cart_items);
-                $userAddress = App\UserAdresses::find($order->user_adresses_id) ;
-                $family = $order->provider;
-                @endphp
-                <!-- make table for products in order -->
-
                 <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
 
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>صورة المنتج</th>
                             <th>اسم المنتج</th>
                             <th>سعر المنتج</th>
                             <th>الاضافات الاساسية</th>
-                            <th>الاضافات الجانبية</th>
                             <th>الكمية</th>
+                            <th>مكان التسليم</th>
                             <th>الملاحظات</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach ($orderItems as $item)
-                        @php
-                        $product = App\Product::find($item->product_id);
-                        @endphp
                         <tr>
-                            <td>{{$loop->iteration}}</td>
+
                             <td>
-                                @if($product != null && $product->pictures()->first() != null)
-                                <img src="{{asset('uploads/products/'.$product->pictures()->first()->image)}}" height="100px;" width="100px;">
+                                @if($order->product != null && $order->product->pictures()->first() != null)
+                                <img src="{{asset('uploads/products/'.$order->product->pictures()->first()->image)}}" height="80px;" width="80px;">
                                 @else
-                                المنتج غير متوفر حاليا
+                                لا يوجد صور حاليا
                                 @endif
                             </td>
-                            <td>{{$product->name ?? 'غير متوفر'}}</td>
-                            <td>{{$product->price ?? 0}} ريال</td>
+                            <td>{{$order->product->name ?? 'غير متوفر'}}</td>
+                            <td>{{$order->product->price ?? 0}} ريال</td>
                             <td>
-                                @if($item->additions != null)
-                                @foreach ($item->getAdditions($item->additions) as $addition)
-                                {{$addition['name'] }} ( {{($addition['price'])}} ريال) <br>
+                                @if($order->values != null)
+                                @foreach ($order->values as $value)
+                                    {{$value["property_name"] }} <span>: {{$value["name"]}}</span>
+                                <br>
                                 @endforeach
                                 @endif
                             </td>
                             <td>
-                                @if($item->more_additions != null)
-                                @foreach ($item->getAdditions($item->more_additions) as $addition)
-                                {{$addition['name'] }} ( {{($addition['price'])}} ريال) <br>
-                                @endforeach
-                                @endif
+                                {{$order->count}}
                             </td>
                             <td>
-                                {{$item->quantity}}
+                                {{$order->recieve_place}}
                             </td>
                             <td>
-                                {{$item->notes}}
+                                {{$order->notes}}
                             </td>
                         </tr>
-                        @endforeach
+
                     </tbody>
 
                 </table>

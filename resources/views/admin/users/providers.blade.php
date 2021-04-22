@@ -109,8 +109,16 @@
                                 @endif
                             </td>
 
-                            <td>{{ $user->products->count() }} </td>
-                            <td>{{ $user->providerOrders->count() }} </td>
+                            <td>
+                                {{-- <a href="{{route('products.index',$user->id)}}"> --}}
+                                    {{ $user->products->count() }} 
+                                {{-- </a> --}}
+                            </td>
+                            <td>
+                                <a href="{{route('orders.index',$user->id)}}">
+                                    {{ $user->providerOrders->count() }}
+                                </a> 
+                            </td>
 
                             <td>
                                 <div class="btn-group">

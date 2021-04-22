@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminController;
 use App\History;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\User;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -14,9 +15,9 @@ class OrdersController extends Controller
      *
      * @return void
      */
-    public function index()
+    public function index($provider_id = null)
     {
-        $records = Order::with('user', 'provider', 'product')->whereIn('status', ['0','1'])->latest()->get();
+        $records = Order::with('user', 'provider', 'product')->provider($provider_id)->whereIn('status', ['0','1'])->latest()->get();
         return view('admin.orders.index', compact('records'));
     }
 
@@ -53,6 +54,8 @@ class OrdersController extends Controller
      */
     public function show(Order $order)
     {
+        $order->load('product');
+        $order['values'] = $order->getAdditions($order->property_values);
         return view('admin.orders.show', compact('order'));
     }
 

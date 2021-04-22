@@ -63,7 +63,7 @@ class UserController extends Controller
             'phone_number'          => 'required|unique:users',
             'name'                  => 'required|max:255',
             'email'                 => 'nullable|email|unique:users',
-            'image'                 => 'required_if:type,1|mimes:jpeg,bmp,png,jpg|max:3000',
+            'image'                 => 'nullable|mimes:jpeg,bmp,png,jpg|max:3000',
             'password'              => 'required|string|min:6',
             'password_confirmation' => 'required|same:password',
             'active'                => 'nullable',

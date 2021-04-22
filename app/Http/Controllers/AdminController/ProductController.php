@@ -13,9 +13,9 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($provider_id = null)
     {
-        return view('admin.products.index', ['products'=>Product::with('provider')->get()]);
+        return view('admin.products.index', ['products'=>Product::with('provider')->provider($provider_id)->get()]);
     }
 
     /**
@@ -39,21 +39,7 @@ class ProductController extends Controller
         $this->validate($request, $this->rules($request->method()));
         $product = Product::create($request->only('name','details','price','category_id','provider_id'));
 
-        // save product images to storage
-        $images = $request->file('image');
-        if ($images != null) {
-            foreach ($images as $value) {
-                $product->pictures()->create([
-                    'image' => UploadImage($value, 'product'. '_' . randNumber(3), 'uploads/products')
-                ]);
-            }
-        }
-
-        //save prodcut property valeus to storage
-        $values = $request->property_value_id;
-        if ($values != null) {
-            $product->values()->sync($values);
-        }
+        $this->createAdditions($product,$request);
 
         flash('تم اضافة المنتج بنجاح')->success();
         return redirect()->route('products.index');

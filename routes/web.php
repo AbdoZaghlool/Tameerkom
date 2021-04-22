@@ -64,23 +64,24 @@ Route::prefix('admin')->group(function () {
         Route::post('add/pages/terms', 'PageController@store_terms')->name('terms.store');
 
         // ================================main-categories====================================
-        Route::get('/main-categories/{category}/delete', 'MainCategoriesController@destroy');
+        Route::get('/main-categories/{category}/delete', 'MainCategoriesController@destroy')->name('main-categories.destroy');
         Route::resource('main-categories', 'MainCategoriesController');
 
         // ================================regions=============================================
-        Route::get('/regions/{id}/delete', 'RegionController@destroy');
+        Route::get('/regions/{id}/delete', 'RegionController@destroy')->name('regions.destroy');
         Route::resource('regions', 'RegionController');
 
         // ================================cities=============================================
-        Route::get('/cities/{id}/delete', 'CityController@destroy');
+        Route::get('/cities/{id}/delete', 'CityController@destroy')->name('cities.destroy');
         Route::resource('cities', 'CityController');
 
         // ================================products=============================================
+        // Route::get('/products/{porvider_id?}', 'ProductController@index')->name('products.index');
         Route::get('/products/{id}/delete', 'ProductController@destroy')->name('products.destroy');
         Route::resource('products', 'ProductController');
 
         // ================================properties=============================================
-        Route::get('/properties/{id}/delete', 'PropertyController@destroy');
+        Route::get('/properties/{id}/delete', 'PropertyController@destroy')->name('properties.destroy');
         Route::resource('properties', 'PropertyController');
 
         // ================================property-values=============================================
@@ -102,6 +103,9 @@ Route::prefix('admin')->group(function () {
         });
 
         // ================================orders=============================================
+        Route::get('/show-orders/{order}', 'OrdersController@show')->name('orders.show');
+        Route::get('/orders/{provider_id?}', 'OrdersController@index')->name('orders.index');
+        Route::get('/orders/canceled', 'OrdersController@canceled')->name('orders.canceled');
         Route::post('orders/update-cancele-status', function (Request $request) {
             $order = \App\Order::findOrFail($request->id);
             $order->status = '2';
@@ -109,9 +113,8 @@ Route::prefix('admin')->group(function () {
             return $saved ? json_encode('done') : json_encode('error');
         })->name('orders.post-update-cancele-request');
 
-        Route::get('/orders', 'OrdersController@index')->name('orders.index');
-        Route::get('/orders/canceled', 'OrdersController@canceled')->name('orders.canceled');
-        Route::get('/orders/{order}', 'OrdersController@show')->name('orders.show');
+
+        
         Route::get('/orders/providers-cancele-requests', 'OrdersController@providersCanceleRequests')->name('orders.cancel-requests');
         Route::get('/orders/{order}/delete', 'OrdersController@delete');
 
@@ -128,7 +131,7 @@ Route::prefix('admin')->group(function () {
 
 
         // ================================splashs==============================================
-        Route::get('/splashs/{splash}/delete', 'SplashController@destroy');
+        Route::get('/splashs/{splash}/delete', 'SplashController@destroy')->name('splashs.destroy');
         Route::resource('splashs', 'SplashController');
 
 
