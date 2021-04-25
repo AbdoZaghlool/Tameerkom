@@ -48,7 +48,7 @@
 
     <div class="form-group mb-3">
         {!! Form::label('category_id', 'القسم'); !!}
-        {!! Form::select('category_id', categories(), null,
+        {!! Form::select('category_id', categories(), $product?$product->category_id:null,
         ['class' => 'form-control','disabled'=>$readonly, 'placeholder' => 'اختر قيمة']) !!}
         @error('category_id')
         <span class="help-block">

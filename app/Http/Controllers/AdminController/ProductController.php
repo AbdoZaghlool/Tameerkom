@@ -38,9 +38,7 @@ class ProductController extends Controller
     {
         $this->validate($request, $this->rules($request->method()));
         $product = Product::create($request->only('name','details','price','category_id','provider_id'));
-
         $this->createAdditions($product,$request);
-
         flash('تم اضافة المنتج بنجاح')->success();
         return redirect()->route('products.index');
     }
@@ -104,7 +102,6 @@ class ProductController extends Controller
 
     protected function rules($method)
     {
-        // dd($method);
         if($method == "PUT"){
             return [
                 'name'                 => 'required|min:3',
@@ -112,8 +109,12 @@ class ProductController extends Controller
                 'price'                => 'required|numeric',
                 'category_id'          => 'required|exists:categories,id',
                 'provider_id'          => 'required|exists:users,id',
-                'property_value_id'    => 'required_if:category_id,1,2,3|array',
-                'property_value_id.*'  => 'required|exists:property_values,id',
+                'type'    => 'required_if:category_id,1,2,3|array',
+                'size'    => 'required_if:category_id,1,3|array',
+                'shape'    => 'required_if:category_id,1|array',
+                'pressure'    => 'required_if:category_id,2|array',
+                'area'      => 'required_if:category_id,2|array',
+                'place'    => 'required_if:category_id,3|array',
                 'image'                => 'nullable|array',
                 'image.*'              => 'mimes:jpeg,bmp,png,jpg|max:2048',
             ];
@@ -125,8 +126,12 @@ class ProductController extends Controller
             'price'                => 'required|numeric',
             'category_id'          => 'required|exists:categories,id',
             'provider_id'          => 'required|exists:users,id',
-            'property_value_id'    => 'required_if:category_id,1,2,3|array',
-            'property_value_id.*'  => 'required|exists:property_values,id',
+            'type'    => 'required_if:category_id,1,2,3|array',
+            'size'    => 'required_if:category_id,1,3|array',
+            'shape'    => 'required_if:category_id,1|array',
+            'pressure'    => 'required_if:category_id,2|array',
+            'area'      => 'required_if:category_id,2|array',
+            'place'    => 'required_if:category_id,3|array',
             'image'                => 'required|array',
             'image.*'              => 'mimes:jpeg,bmp,png,jpg|max:2048',
         ];
@@ -143,6 +148,20 @@ class ProductController extends Controller
             }
         }
 
+        // dd($request->all(),'fromfun');
+        $request['property_value_id'] = null;
+        if($request->category_id == 1){
+            //iron
+            $request['property_value_id'] = array_merge($request->shape,$request->type,$request->size);
+        }elseif($request->category_id == 2){
+            // khara
+            $request['property_value_id'] = array_merge($request->pressure,$request->type,$request->area);
+        }elseif($request->category_id == 3){
+            //tabok
+            $request['property_value_id'] = array_merge($request->size,$request->type,$request->place);
+        }
+
+        // dd($request->property_value_id);
         //save prodcut property valeus to storage
         if ($request->property_value_id != null) {
             $product->values()->sync($request->property_value_id);

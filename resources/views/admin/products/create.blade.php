@@ -48,7 +48,7 @@
                     <div class="portlet light ">
                         {!! Form::open(['route'=>'products.store','files'=>true]) !!}
 
-                        @include('admin.products._form',['readonly' =>false])
+                        @include('admin.products._form',['readonly' =>false,'product'=>null])
 
                         {!! Form::close() !!}
                     </div>

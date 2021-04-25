@@ -7,8 +7,8 @@
     <body>
         @foreach ($props as $prop)
         <div class='form-group col-md-4 mb-3' id='type'>
-            {!! Form::label('property_value_id', $prop->name); !!}
-            {!! Form::select('property_value_id[]', $prop->values->pluck('name','id'), $product->values,
+            {!! Form::label(categoryPropertiesName($prop->category_id,$prop->name).'', $prop->name); !!}
+            {!! Form::select(categoryPropertiesName($prop->category_id,$prop->name).'[]', $prop->values->pluck('name','id'), $product->values,
             ['class' => 'form-control select2', 'multiple'=>true]) !!}
         </div>
         @endforeach

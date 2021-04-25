@@ -47,7 +47,7 @@
                 <div class="col-md-12">
                     <div class="portlet light ">
                         {!! Form::model($product, ['route' => ['products.update', $product],'files'=>true,'method'=>"PUT"]) !!}
-                            @include('admin.products._form',['readonly' =>false])
+                            @include('admin.products._form',['readonly' =>false,'product'=>$product])
                             <input type="hidden" name="product_id" value="{{$product->id}}">
 
                         {!! Form::close() !!}
