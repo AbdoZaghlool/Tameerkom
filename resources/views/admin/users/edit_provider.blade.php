@@ -348,16 +348,8 @@
     var map;
 
     function initMap() {
-        var latitude = {
-            {
-                $user - > latitude ? ? 24.482582269844997
-            }
-        }; // YOUR LATITUDE VALUE
-        var longitude = {
-            {
-                $user - > longitude ? ? 39.567722188865126
-            }
-        }; // YOUR LONGITUDE VALUE
+        var latitude = {{$user->latitude ?? 24.482582269844997}}; // YOUR LATITUDE VALUE
+        var longitude = {{$user->longitude ?? 39.567722188865126}}; // YOUR LONGITUDE VALUE
         var myLatLng = {
             lat: latitude
             , lng: longitude
