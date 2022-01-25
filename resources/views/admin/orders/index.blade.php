@@ -64,7 +64,7 @@
                             <th> وقت الطلب </th>
                             <th> حالة الطلب </th>
                             <th> السعر(ريال) </th>
-                            {{-- <th>عرض التفاصيل</th> --}}
+                            <th>عرض التفاصيل</th>
 
                         </tr>
                     </thead>
@@ -91,7 +91,7 @@
                                 @endif
                             </td>
                             <td> {{ convertArabicNumbersToEnglish($order->price) }} (ريال)</td>
-                            {{-- <td> <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a></td> --}}
+                            <td> <a class="btn btn-info" href="{{route('orders.show',$order)}}">عرض</a></td>
 
                         </tr>
                         @endforeach

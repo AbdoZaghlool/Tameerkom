@@ -104,14 +104,14 @@ class SplashController extends Controller
             array_push($arr, $request->link);
         }
         if (count($arr)>1) {
-            flash(' يمكن فقط اضافة الرابط اوالمنتج اوالمزود ')->error()->important();
+            flash(' يمكن فقط اضافة الرابط اوالمنتج اوالمزود')->error()->important();
             return back()->withInput();
         }
 
         $splash->update([
-            'product_id' => $request->product_id ?? $splash->product_id,
-            'provider_id' => $request->provider_id ?? $splash->provider_id,
-            'link'        => $request->link ?? $splash->link,
+            'product_id'  => $request->product_id ,
+            'provider_id' => $request->provider_id,
+            'link'        => $request->link,
             'image'       => $request->image == null ? $splash->image : UploadImageEdit($request->image, 'slide', 'uploads/sliders', $splash->image)
         ]);
         flash('تم تعديل البانر بنجاح')->important();

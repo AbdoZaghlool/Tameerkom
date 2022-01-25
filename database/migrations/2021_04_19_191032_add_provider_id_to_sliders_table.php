@@ -26,7 +26,7 @@ class AddProviderIdToSlidersTable extends Migration
     public function down()
     {
         Schema::table('sliders', function (Blueprint $table) {
-            //
+            $table->dropColumn('provider_id');
         });
     }
 }

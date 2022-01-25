@@ -2,6 +2,7 @@
 
 use App\Category;
 use App\Property;
+use App\User;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
@@ -17,6 +18,24 @@ function explodeByComma($str)
 function categories()
 {
     return Category::pluck('name', 'id');
+}
+
+function categoryPropertiesName($category_id,$propName)
+{
+    $values =[
+        'type'     => 'النوع',
+        'shape'    => 'الشكل',
+        'place'    => 'مكان التنزيل',
+        'size'     => 'الحجم',
+        'pressure' => 'الضغط',
+        'area'     => 'مكان الصب'
+    ];
+    return array_search($propName,$values);
+}
+
+function providers()
+{
+    return User::whereType('1')->whereActive(1)->pluck('name', 'id');
 }
 
 function properties()

@@ -86,7 +86,7 @@
                                 </a>
                                 @endif
                             </td>
-                            <td> {{ $value->created_at->format('Y-m-d g:i A') }} </td>
+                            <td> {{ optional($value->created_at)->format('Y-m-d g:i A') }} </td>
 
                             <td>
                                 <div class="btn-group">

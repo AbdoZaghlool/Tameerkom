@@ -44,9 +44,9 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="btn-group">
-                                {{--  <a class="btn sbold green" href="{{ route('products.create') }}"> إضافة جديد
-                                <i class="fa fa-plus"></i>
-                                </a> --}}
+                                <a class="btn sbold green" href="{{ route('products.create') }}"> إضافة جديد
+                                    <i class="fa fa-plus"></i>
+                                </a>
                             </div>
                         </div>
 

@@ -18,17 +18,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="/admin/main-categories">الاقسام</a>
+            <a href="/admin/products">المنتجات</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>تعديل قسم</span>
+            <span>تعديل منتج</span>
         </li>
     </ul>
 </div>
 
-<h1 class="page-title"> الاقسام
-    <small>تعديل قسم</small>
+<h1 class="page-title"> المنتجات
+    <small>تعديل منتج</small>
 </h1>
 @endsection
 
@@ -46,10 +46,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="portlet light ">
-                        {!! Form::model($product, ['route' => ['products.update', $product]]) !!}
-                        @method('PUT')
-
-                        @include('admin.products._form',['readonly' =>false])
+                        {!! Form::model($product, ['route' => ['products.update', $product],'files'=>true,'method'=>"PUT"]) !!}
+                            @include('admin.products._form',['readonly' =>false,'product'=>$product])
+                            <input type="hidden" name="product_id" value="{{$product->id}}">
 
                         {!! Form::close() !!}
                     </div>

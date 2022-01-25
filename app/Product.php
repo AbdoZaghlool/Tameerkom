@@ -107,9 +107,16 @@ class Product extends Model
      */
     public function scopeNotMe($query, $params)
     {
-        //        dd($params);
         if (isset($params) && trim($params !== '')) {
             $query->where('provider_id', '!=', $params);
+        }
+        return $query;
+    }
+
+    public function scopeProvider($query, $params)
+    {
+        if (isset($params) && trim($params !== '')) {
+            $query->where('provider_id', $params);
         }
         return $query;
     }

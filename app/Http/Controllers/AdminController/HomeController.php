@@ -6,6 +6,8 @@ use App\City;
 use App\Order;
 use App\History;
 use App\Http\Controllers\Controller;
+use App\Picture;
+use App\Product;
 use App\Property;
 use App\User;
 use App\UserDevice;
@@ -37,35 +39,31 @@ class HomeController extends Controller
         return view('admin.home', compact('users', 'admins'));
     }
 
-    /**
-     * get regions from ajax call
-     *
-     * @param City $id
-     * @return json
-     */
-    public function filterdUsers(Request $request, $id =null)
+
+    public function catProperties($id)
     {
-        if ($id != null) {
-            $topic = Topic::with('families')->find($id);
-            $userIds = $topic->families()->where('active', 1)->get();
-            return $userIds;
-        } else {
-            $users = User::with('topics')->where('type', '1')->where('active', 1)
-                ->where(function ($q) use ($request) {
-                    if ($request->city_id != null) {
-                        $q->where('city_id', $request->city_id);
-                    }
-                    if ($request->topic_id != null) {
-                        $q->whereHas('topics', function ($qq) use ($request) {
-                            $qq->where('topic_id', $request->topic_id);
-                        });
-                    }
-                    if ($request->name != null) {
-                        $q->where('name', 'like', '%'.$request->name.'%');
-                    }
-                })
-                ->get()->toArray();
-            return $users;
+        $props = Property::with('values')->where('category_id', $id)->get();
+        return view('admin.products.div', ['props'=> $props])->render();
+    }
+
+    public function productValues($product_id)
+    {
+        $product = Product::with('values')->find($product_id);
+        $props = Property::with('values')->where('category_id', $product->category_id)->get();
+        return view('admin.products.edit-div', ['product'=> $product, 'props' => $props])->render();
+    }
+
+    public function deleteImage($id)
+    {
+        $image = Picture::find($id);
+        $value = $image->image;
+        $deleted = $image->delete();
+        if ($deleted) {
+            if (file_exists(public_path('uploads/products/' . $value))) {
+                unlink(public_path('uploads/products/' . $value));
+            }
+            $v = '{"message":"done"}';
+            return response()->json($v);
         }
     }
 

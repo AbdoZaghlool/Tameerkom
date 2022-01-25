@@ -118,6 +118,14 @@ return [
     */
     'attributes'           => [
         'name'                  => 'الاسم',
+        'type'                  => 'النوع',
+        'shape'                  => 'الشكل',
+        'place'                  => 'مكان التنزيل',
+        'size'                  => 'الحجم',
+        'pressure'                  => 'الضغط',
+        'area'                  => 'مكان الصب',
+        'property_value_id'   => 'الخصائص',
+        'category_id'   => 'القسم',
         'family_commission'     => 'عمولة المزودين',
         'min_value_withdrow_driver'     => 'الحد الادني للسحب',
         'min_value_withdrow_family'     => 'الحد الادني للسحب',

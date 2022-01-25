@@ -1,3 +1,8 @@
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+        <div class="alert alert-danger">{{$error}}</div>
+    @endforeach
+@endif
 <div>
     <div class="form-group mb-3">
         {!! Form::label('name', 'الاسم', ['class' => 'form-label']); !!}
@@ -30,8 +35,20 @@
     </div>
 
     <div class="form-group mb-3">
+        {!! Form::label('provider_id', 'المصنع'); !!}
+        {!! Form::select('provider_id', providers(), null,
+        ['class' => 'form-control','disabled'=>$readonly, 'placeholder' => 'اختر قيمة']) !!}
+        @error('provider_id')
+        <span class="help-block">
+            <strong style="color: red;">{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
+
+
+    <div class="form-group mb-3">
         {!! Form::label('category_id', 'القسم'); !!}
-        {!! Form::select('category_id', categories(), null,
+        {!! Form::select('category_id', categories(), $product?$product->category_id:null,
         ['class' => 'form-control','disabled'=>$readonly, 'placeholder' => 'اختر قيمة']) !!}
         @error('category_id')
         <span class="help-block">
@@ -46,7 +63,7 @@
 
     <div class="form-group mb-3">
         {!! Form::label('image', 'الصور'); !!}
-        {!! Form::file('image',
+        {!! Form::file('image[]',
         ['class' => 'form-control','disabled'=>$readonly,
         'placeholder' => 'اختر قيمة', 'multiple'=>true]) !!}
         @error('image')
@@ -54,6 +71,20 @@
             <strong style="color: red;">{{ $message }}</strong>
         </span>
         @enderror
+    </div>
+
+    <div class="row">
+        @isset($product)
+            @if ($product->pictures)
+                @foreach ($product->pictures as $item)
+                <div class="col-md-3 img_{{ $item->id }}">
+                    <p><img src="{{ asset('uploads/products/'.$item->image) }}" class="img-fluid" height="150" width="150" id="file_name"></p>
+                    <a id="{{ $item->id }}" style="color: white;text-decoration: none;" class="delete_image hideDiv btn btn-danger">
+                        <i class="glyphicon glyphicon-trash "></i> مسح</a>
+                </div>
+                @endforeach
+            @endif
+        @endisset
     </div>
 
 
@@ -73,10 +104,32 @@
 <script>
     $(document).ready(function() {
 
+<<<<<<< HEAD
         $('select[name="category_id"]').on('change', function() {
             var id = $(this).val();
             console.log(id);
-            
+
+=======
+        var product_id = $('input[name="product_id"]').val();
+        if(product_id)
+        {
+            $.ajax({
+                url: "/product-values/"+product_id,
+                type: 'GET',
+                datatype: 'json',
+                success: function (data) {
+                    $("#roo").append(data);
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+
+        }
+
+        $('select[name="category_id"]').on('change', function() {
+            var id = $(this).val();
+>>>>>>> 869b1ae06e405b2f666bcd6cd5eb7d63e1d6f374
             $.ajax({
                 url: "/category-properties/" + id,
                 type: 'GET',
@@ -95,4 +148,26 @@
     });
 
 </script>
+<<<<<<< HEAD
+=======
+<script>
+    $(".delete_image").click(function() {
+        var id = $(this).attr('id');
+        var url = '{{ route("imageIntroRemove", ":id") }}';
+        url = url.replace(':id', id);
+        //alert(image_id );
+        $.ajax({
+            url: url
+            , type: 'GET'
+            , success: function(result) {
+                if (!result.message) {
+                    $(".img_" + id).fadeOut('1000');
+                }
+
+            }
+        });
+    });
+
+</script>
+>>>>>>> 869b1ae06e405b2f666bcd6cd5eb7d63e1d6f374
 @endsection

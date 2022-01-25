@@ -138,7 +138,7 @@ float: right;
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-light red" href="{{route('providers.index')}}">
+        <a class="dashboard-stat dashboard-stat-light red" href="{{route('products.index')}}">
             <div class="visual">
                 <i class="fa fa-cutlery" aria-hidden="true"></i>
             </div>
@@ -146,7 +146,7 @@ float: right;
                 <div class="number">
                     <span>{{App\Product::count()}}</span>
                 </div>
-                <div class="desc"> عدد المنتجات </div>
+                <div class="desc">المنتجات</div>
             </div>
         </a>
     </div>
@@ -200,7 +200,7 @@ float: right;
             </div>
             <div class="details">
                 <div class="number">
-                    <span>{{App\Order::where('status','1')->where('payment_status',0)->count()}}</span>
+                    <span>{{App\Order::where('status','1')->count()}}</span>
                 </div>
                 <div class="desc"> العمولات المستحقة </div>
             </div>
@@ -214,7 +214,7 @@ float: right;
             </div>
             <div class="details">
                 <div class="number">
-                    <span>{{App\Order::where('status','1')->where('payment_status',1)->count()}}</span>
+                    <span>{{App\Order::where('status','1')->count()}}</span>
                 </div>
                 <div class="desc"> العمولات المدفوعة </div>
             </div>
@@ -253,221 +253,6 @@ float: right;
 
 </div>
 
-{{-- <div class="row">
-    <div class="col-md-6">
-        <div class="card-body" style="display: block;">
-            <div class="chartjs-size-monitor">
-                <div class="chartjs-size-monitor-expand">
-                    <div class="">
-                    </div>
-                </div>
-                <div class="chartjs-size-monitor-shrink">
-                    <div class="">
-                    </div>
-                </div>
-            </div>
-            <canvas id="myChart"></canvas>
-        </div>
-    </div>
 
-    <div class="col-md-6">
-        <div class="card-body" style="display: block;">
-            <div class="chartjs-size-monitor">
-                <div class="chartjs-size-monitor-expand">
-                    <div class="">
-                    </div>
-                </div>
-                <div class="chartjs-size-monitor-shrink">
-                    <div class="">
-                    </div>
-                </div>
-            </div>
-            <canvas id="myChart_2"></canvas>
-        </div>
-    </div>
-
-</div>  --}}
-<br>
-
-{{-- <div class="row">
-    <div id="canvas-holder" style="width:70%; margin:auto;"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-		<canvas id="canvas" style="display: block; width: 540px; height: 270px;" width="540" height="270" class="chartjs-render-monitor"></canvas>
-	</div>
-</div>  --}}
-
-@endsection
-
-@section('scripts')
-{{-- <script>
-    var ctx = document.getElementById('myChart');
-    var myChart = new Chart(ctx, {
-        type: 'pie'
-        , data: {
-            labels: ['الطلبات الجديدة', 'الطلبات النشطة', 'الطلبات المكتملة', 'الطلبات الملغية']
-            , datasets: [{
-                label: 'احصائيات الطلبات'
-                , data: [{
-                        {
-                            App\ Order::where('status', '0') - > get() - > count()
-                        }
-                    }
-                    , {
-                        {
-                            App\ Order::where('status', '2') - > get() - > count()
-                        }
-                    }
-                    , {
-                        {
-                            App\ Order::where('status', '3') - > get() - > count()
-                        }
-                    }
-                    , {
-                        {
-                            App\ Order::where('status', '4') - > get() - > count()
-                        }
-                    }
-                , ]
-                , backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)'
-                    , 'rgba(54, 162, 235, 0.2)'
-                    , 'rgba(255, 206, 86, 0.2)'
-                    , 'rgba(75, 192, 192, 0.2)'
-                , ]
-                , borderColor: [
-                    'rgba(255, 99, 132, 1)'
-                    , 'rgba(54, 162, 235, 1)'
-                    , 'rgba(255, 206, 86, 1)'
-                    , 'rgba(75, 192, 192, 1)'
-                , ]
-                , borderWidth: 1
-            }]
-        }
-        , options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-
-</script>
-
-<script>
-    var ctx = document.getElementById('myChart_2');
-    var myChart = new Chart(ctx, {
-        type: 'pie'
-        , data: {
-            labels: ['الطلبات الحالية', 'الطلبات المجدولة']
-            , datasets: [{
-                label: 'احصائيات الطلبات'
-                , data: [{
-                        {
-                            App\ Order::where('type_id', 1) - > get() - > count()
-                        }
-                    }
-                    , {
-                        {
-                            App\ Order::where('type_id', 2) - > get() - > count()
-                        }
-                    }
-                , ]
-                , backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)'
-                    , 'rgba(54, 162, 235, 0.2)',
-
-                ]
-                , borderColor: [
-                    'rgba(255, 99, 132, 1)'
-                    , 'rgba(54, 162, 235, 1)',
-
-                ]
-                , borderWidth: 1
-            }]
-        }
-        , options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-
-</script>  --}}
-
-{{-- <script>
-
-    $.ajax({
-        url: '/get-orders-status',
-        processData: false,
-        contentType: false,
-        type: 'get',
-        success: function(data){
-            if(data.length > 0){
-                var families = data['families'];
-                var count = data['count'];
-                
-
-                console.log(data);
-
-                var ctx = document.getElementById('canvas').getContext('2d');
-                var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: families,
-                    datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-
-
-
-
-
-            }// end length condition 
-        }// end success
-        }); // end ajax call
-
-
-
-
-
-
-
-
-</script>  --}}
 
 @endsection
