@@ -1,6 +1,7 @@
 <?php
 
-
+use App\Category;
+use App\Property;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
@@ -11,6 +12,18 @@ use LaravelFCM\Facades\FCM;
 function explodeByComma($str)
 {
     return explode(",", $str);
+}
+
+function categories()
+{
+    return Category::pluck('name', 'id');
+}
+
+function properties()
+{
+    return Property::with(['values' => function ($query) {
+        $query->select("id", "name");
+    }])->pluck('name', 'id');
 }
 
 function explodeByDash($str)

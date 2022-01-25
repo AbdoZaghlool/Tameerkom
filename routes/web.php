@@ -26,6 +26,7 @@ Route::get('/get_sub_cat/{model}/{col}/{id}', function ($model, $col, $id) {
     return $data;
 });
 
+Route::get('category-properties/{id}', 'AdminController\HomeController@catProperties');
 
 Route::redirect('/login', '/admin/login');
 
@@ -71,6 +72,10 @@ Route::prefix('admin')->group(function () {
         // ================================cities=============================================
         Route::get('/cities/{id}/delete', 'CityController@destroy');
         Route::resource('cities', 'CityController');
+
+        // ================================products=============================================
+        Route::get('/products/{id}/delete', 'ProductController@destroy');
+        Route::resource('products', 'ProductController');
 
         // ================================properties=============================================
         Route::get('/properties/{id}/delete', 'PropertyController@destroy');

@@ -39,16 +39,28 @@ class SplashController extends Controller
     {
         $this->validate($request, [
             'image'       => 'required|mimes:jpeg,jpg,png|max:2048',
-            'product_id'  => 'nullable|exists:products,id',
-            'link'        => 'nullable',
+            'provider_id'  => 'sometimes',
+            'product_id'  => 'sometimes',
+            'link'        => 'sometimes',
         ]);
-        if ($request->product_id && $request->link) {
-            flash('لا يمكن اضافة الرابط والمنتج معا')->error()->important();
+        $arr = [];
+        if ($request->product_id !== null) {
+            array_push($arr, $request->product_id);
+        }
+        if ($request->provider_id !== null) {
+            array_push($arr, $request->provider_id);
+        }
+        if ($request->link !== null) {
+            array_push($arr, $request->link);
+        }
+        if (count($arr)>1) {
+            flash(' يمكن فقط اضافة الرابط اوالمنتج اوالمزود ')->error()->important();
             return back()->withInput();
         }
         Slider::create([
             'image'       => UploadImage($request->image, 'slide', 'uploads/sliders'),
             'product_id'  => $request->product_id == 0 ? null : $request->product_id,
+            'provider_id'  => $request->provider_id == 0 ? null : $request->provider_id,
             'link'        => $request->link,
         ]);
         flash('تم اضافة البانر بنجاح')->important();
@@ -76,17 +88,29 @@ class SplashController extends Controller
     public function update(Request $request, Slider $splash)
     {
         $this->validate($request, [
-            'product_id' => 'nullable|exists:products,id',
-            'image'       => 'nullable|mimes:jpeg,jpg,png|max:2048'
+            'image'       => 'nullable|mimes:jpeg,jpg,png|max:2048',
+            'provider_id'  => 'sometimes',
+            'product_id'  => 'sometimes',
+            'link'        => 'sometimes',
         ]);
-
-        if ($request->product_id && $request->link) {
-            flash('لا يمكن اضافة الرابط والمنتج معا')->error()->important();
+        $arr = [];
+        if ($request->product_id !== null) {
+            array_push($arr, $request->product_id);
+        }
+        if ($request->provider_id !== null) {
+            array_push($arr, $request->provider_id);
+        }
+        if ($request->link !== null) {
+            array_push($arr, $request->link);
+        }
+        if (count($arr)>1) {
+            flash(' يمكن فقط اضافة الرابط اوالمنتج اوالمزود ')->error()->important();
             return back()->withInput();
         }
 
         $splash->update([
             'product_id' => $request->product_id ?? $splash->product_id,
+            'provider_id' => $request->provider_id ?? $splash->provider_id,
             'link'        => $request->link ?? $splash->link,
             'image'       => $request->image == null ? $splash->image : UploadImageEdit($request->image, 'slide', 'uploads/sliders', $splash->image)
         ]);

@@ -6,6 +6,7 @@ use App\City;
 use App\Order;
 use App\History;
 use App\Http\Controllers\Controller;
+use App\Property;
 use App\User;
 use App\UserDevice;
 
@@ -66,6 +67,12 @@ class HomeController extends Controller
                 ->get()->toArray();
             return $users;
         }
+    }
+
+    public function catProperties($id)
+    {
+        $props = Property::with('values')->where('category_id', $id)->get();
+        return view('admin.products.div', ['props'=> $props])->render();
     }
 
     /**
